@@ -1,0 +1,151 @@
+employee_id,name,email,department,job_role,hire_date,location,manager_id
+EMP001,,employee1@company.com,Human Resources,Financial Analyst,2024-10-10,Toronto,
+EMP002,Employee 2,employee2@company.com, Finance ,Marketing Specialist,2024-01-19,San Francisco,
+EMP003,Employee 3,employee3@company.com,Human Resources,Operations Lead,2024-11-13,Berlin,
+EMP004,Employee 4,employee4@company.com,Human Resources,Marketing Specialist,2020-08-06,New York,
+emp005,Employee 5,employee5@company.com, Engineering ,Sales Executive,2021-08-13,London,
+EMP006,Employee 6,employee6@company.com, Engineering ,Financial Analyst,2020-12-22,Toronto,
+EMP007,Employee 7,employee7@company.com,Product,Marketing Specialist,2022-08-22,Berlin,
+EMP008,Employee 8,employee8@company.com,Sales,Product Manager,2020-03-16,Austin,
+EMP009,Employee 9,employee9@company.com,Human Resources,Software Engineer,2023-06-05,London,
+EMP010,Employee 10,employee10@company.com, Engineering ,Marketing Specialist,2025-11-11,Berlin,
+EMP011,Employee 11,employee11@company.com,Human Resources,HR Generalist,2023-09-17,Austin,
+EMP012,Employee 12,employee12@company.com,Sales,Financial Analyst,2024-08-31,Sydney,
+EMP013,Employee 13,employee13@company.com,Product,Operations Lead,2023-09-24,Toronto,
+EMP014,,employee14@company.com, Marketing ,Software Engineer,2025-01-15,Toronto,
+EMP015,Employee 15,employee15@company.com,Sales,Sales Executive,2019-12-04,Berlin,
+EMP016,,employee16@company.com,Human Resources,Marketing Specialist,2022-02-13,,
+EMP017,Employee 17,employee17@company.com,Sales,Marketing Specialist,2025-06-26,London,
+EMP018,Employee 18,employee18@company.com, Operations ,Marketing Specialist,2019-11-05,New York,EMP001
+ EMP019 ,Employee 19,employee19@company.com, Engineering ,Financial Analyst,2023-01-14,New York,EMP015
+EMP020,Employee 20,employee20@company.com, Finance ,Sales Executive,2022-05-28,Sydney,EMP010
+EMP021,Employee 21,employee21@company.com,Human Resources,Product Manager,2021-03-14,Toronto,
+EMP022,Employee 22,employee22@company.com, Operations ,Product Manager,2021-04-04,,EMP006
+EMP023,Employee 23,employee23@company.com,Human Resources,Sales Executive,2023-03-26,Toronto,EMP012
+EMP024,Employee 24,employee24@company.com, Engineering ,Operations Lead,2023-03-10,Austin,
+EMP025,Employee 25,employee25@company.com, Engineering ,Financial Analyst,2025-05-17,New York,EMP005
+ EMP026 ,Employee 26,employee26@company.com, Finance ,Product Manager,2023-05-29,Toronto,EMP003
+EMP027,Employee 27,employee27@company.com,Human Resources,Product Manager,2022-10-07,Austin,EMP007
+EMP028,Employee 28,employee28@company.com,Human Resources,Financial Analyst,2023-03-26,San Francisco,EMP012
+EMP029,Employee 29,employee29@company.com,Product,Sales Executive,2020-02-07,Sydney,EMP001
+EMP030,Employee 30,employee30@company.com,Human Resources,Operations Lead,2025-10-05,London,EMP005
+EMP031,Employee 31,employee31@company.com,Sales,Sales Executive,2023-03-27,Berlin,
+EMP032,Employee 32,employee32@company.com, Finance ,Operations Lead,2021-02-12,Austin,EMP007
+EMP033,Employee 33,employee33@company.com,Product,Sales Executive,2023-04-12,Toronto,EMP009
+EMP034,Employee 34,employee34@company.com, Operations ,Operations Lead,2023-11-18,London,EMP015
+EMP035,Employee 35,employee35@company.com, Finance ,HR Generalist,2022-09-21,San Francisco,EMP004
+EMP036,Employee 36,employee36@company.com,Human Resources,Financial Analyst,2020-01-05,New York,EMP012
+EMP037,,employee37@company.com,Sales,Financial Analyst,2026-01-27,Sydney,EMP011
+EMP038,Employee 38,employee38@company.com,Product,Sales Executive,2023-05-09,Austin,EMP003
+EMP039,,employee39@company.com,Human Resources,Product Manager,2021-06-21,Berlin,EMP003
+EMP040,Employee 40,employee40@company.com, Operations ,Marketing Specialist,2022-09-20,London,EMP003
+EMP041,Employee 41,employee41@company.com, Operations ,HR Generalist,2020-01-05,,EMP002
+EMP042,Employee 42,employee42@company.com,Human Resources,Sales Executive,2022-02-13,New York,EMP015
+EMP043,Employee 43,employee43@company.com, Finance ,HR Generalist,2020-01-29,Berlin,EMP005
+EMP044,Employee 44,employee44@company.com,Product,Product Manager,2022-11-09,San Francisco,EMP004
+EMP045,Employee 45,employee45@company.com, Marketing ,Product Manager,2022-12-09,San Francisco,EMP001
+EMP046,Employee 46,employee46@company.com, Engineering ,Software Engineer,2020-04-10,London,EMP007
+EMP047,Employee 47,employee47@company.com, Engineering ,Financial Analyst,2022-06-02,Berlin,EMP011
+EMP048,Employee 48,employee48@company.com,Human Resources,HR Generalist,2024-10-03,New York,EMP005
+EMP049,Employee 49,employee49@company.com,Product,Marketing Specialist,2020-07-13,Toronto,EMP002
+EMP050,Employee 50,employee50@company.com, Marketing ,Product Manager,2021-06-30,New York,EMP010
+EMP051,,employee51@company.com,Sales,Software Engineer,2023-12-02,Toronto,EMP004
+EMP052,Employee 52,employee52@company.com,Human Resources,Financial Analyst,2022-04-18,Sydney,EMP007
+EMP053,Employee 53,employee53@company.com, Operations ,Product Manager,2022-03-05,Toronto,EMP009
+EMP054,Employee 54,employee54@company.com,Sales,Marketing Specialist,2022-04-28,Austin,EMP012
+EMP055,Employee 55,employee55@company.com, Marketing ,Sales Executive,2021-09-17,Berlin,
+EMP056,Employee 56,employee56@company.com, Operations ,Software Engineer,2021-04-28,,
+EMP057,Employee 57,employee57@company.com, Marketing ,Software Engineer,2024-07-18,San Francisco,EMP009
+EMP058,Employee 58,employee58@company.com, Engineering ,Marketing Specialist,2022-05-05,,EMP002
+EMP059,Employee 59,employee59@company.com,Human Resources,Marketing Specialist,2020-05-24,Sydney,EMP007
+EMP060,Employee 60,employee60@company.com,Sales,Software Engineer,2025-02-08,Austin,EMP006
+EMP061,Employee 61,employee61@company.com, Operations ,Sales Executive,2022-06-18,Sydney,EMP004
+EMP062,Employee 62,employee62@company.com, Marketing ,Operations Lead,2025-04-20,,EMP007
+EMP063,Employee 63,employee63@company.com,Human Resources,HR Generalist,2019-12-04,Austin,EMP010
+EMP064,Employee 64,employee64@company.com,Human Resources,Marketing Specialist,2024-01-03,London,EMP013
+EMP065,Employee 65,employee65@company.com,Product,HR Generalist,2023-03-22,Austin,EMP007
+EMP066,Employee 66,employee66@company.com, Operations ,HR Generalist,2024-07-10,San Francisco,EMP003
+EMP067,Employee 67,employee67@company.com,Product,Operations Lead,2022-03-04,Austin,
+EMP068,Employee 68,employee68@company.com, Finance ,Product Manager,2024-10-29,,
+EMP069,Employee 69,employee69@company.com,Product,Financial Analyst,2020-08-07,Berlin,EMP001
+EMP070,Employee 70,employee70@company.com, Operations ,Operations Lead,2023-01-04,Sydney,EMP007
+EMP071,Employee 71,employee71@company.com, Finance ,HR Generalist,2025-02-16,London,EMP011
+EMP072,Employee 72,employee72@company.com, Operations ,HR Generalist,2020-12-22,London,EMP011
+EMP073,Employee 73,employee73@company.com,Product,HR Generalist,2024-08-15,San Francisco,EMP013
+EMP074,Employee 74,employee74@company.com,Product,Product Manager,2025-12-25,San Francisco,EMP012
+EMP075,Employee 75,employee75@company.com,Sales,Operations Lead,2023-02-08,Toronto,EMP012
+EMP076,Employee 76,employee76@company.com, Engineering ,Financial Analyst,2023-08-12,Berlin,EMP008
+EMP077,Employee 77,employee77@company.com, Operations ,Sales Executive,2023-12-14,New York,EMP008
+EMP078,Employee 78,employee78@company.com, Finance ,Sales Executive,2021-02-25,,EMP013
+EMP079,Employee 79,employee79@company.com,Human Resources,Product Manager,2022-02-21,,
+EMP080,Employee 80,employee80@company.com,Product,HR Generalist,2025-03-08,Sydney,EMP006
+EMP081,Employee 81,employee81@company.com, Operations ,Software Engineer,2022-04-11,Toronto,EMP001
+EMP082,Employee 82,employee82@company.com, Operations ,Financial Analyst,2022-12-07,Sydney,
+EMP083,Employee 83,employee83@company.com, Marketing ,Operations Lead,2021-04-30,Berlin,
+EMP084,Employee 84,employee84@company.com,Sales,Operations Lead,2025-03-02,San Francisco,EMP009
+ EMP085 ,Employee 85,employee85@company.com, Marketing ,HR Generalist,2025-12-17,Austin,
+EMP086,Employee 86,employee86@company.com, Operations ,HR Generalist,2024-03-26,Austin,EMP001
+EMP087,Employee 87,employee87@company.com,Sales,Product Manager,2020-09-14,Austin,EMP005
+EMP088,Employee 88,employee88@company.com,Sales,Product Manager,2020-06-09,London,EMP002
+ EMP089 ,Employee 89,employee89@company.com, Operations ,Marketing Specialist,2024-05-22,San Francisco,
+EMP090,Employee 90,employee90@company.com,Product,Software Engineer,2021-06-07,,EMP005
+EMP091,Employee 91,employee91@company.com, Engineering ,Sales Executive,2021-01-27,Berlin,EMP010
+EMP092,Employee 92,employee92@company.com, Finance ,Software Engineer,2023-03-19,Toronto,EMP010
+EMP093,Employee 93,employee93@company.com,Product,Software Engineer,2020-08-31,Sydney,
+EMP094,Employee 94,employee94@company.com, Marketing ,HR Generalist,2023-10-10,San Francisco,EMP008
+EMP095,Employee 95,employee95@company.com, Engineering ,Operations Lead,2023-04-28,New York,EMP004
+EMP096,Employee 96,employee96@company.com, Engineering ,HR Generalist,2020-08-20,Berlin,EMP005
+EMP097,,employee97@company.com, Engineering ,Marketing Specialist,2021-06-24,Austin,EMP011
+EMP098,Employee 98,employee98@company.com, Operations ,Software Engineer,2022-01-18,Berlin,EMP011
+EMP099,Employee 99,employee99@company.com, Finance ,Financial Analyst,2023-02-05,Berlin,EMP001
+EMP100,Employee 100,employee100@company.com, Engineering ,Sales Executive,2024-02-21,Sydney,EMP014
+emp101,Employee 101,employee101@company.com,Human Resources,Software Engineer,2020-02-13,London,
+EMP102,Employee 102,employee102@company.com, Engineering ,Operations Lead,2025-03-06,Toronto,EMP010
+EMP103,Employee 103,employee103@company.com, Marketing ,Marketing Specialist,2025-09-20,New York,
+EMP104,Employee 104,employee104@company.com,Human Resources,Operations Lead,2022-05-30,Berlin,EMP014
+EMP105,Employee 105,employee105@company.com, Marketing ,Operations Lead,2023-12-03,London,
+EMP106,Employee 106,employee106@company.com, Marketing ,Product Manager,2022-03-07,Sydney,EMP006
+EMP107,Employee 107,employee107@company.com, Marketing ,Financial Analyst,2022-09-24,San Francisco,EMP009
+EMP108,Employee 108,employee108@company.com,Product,HR Generalist,2020-11-20,London,EMP011
+EMP109,Employee 109,employee109@company.com,Sales,HR Generalist,2025-01-21,San Francisco,
+EMP110,Employee 110,employee110@company.com,Sales,Sales Executive,2022-11-08,Austin,
+EMP111,Employee 111,employee111@company.com, Engineering ,HR Generalist,2021-09-06,London,EMP004
+EMP112,Employee 112,employee112@company.com,Product,Financial Analyst,2022-07-24,London,EMP002
+ EMP113 ,Employee 113,employee113@company.com, Operations ,Marketing Specialist,2025-01-09,Berlin,EMP009
+EMP114,Employee 114,employee114@company.com, Finance ,HR Generalist,2022-03-02,London,EMP004
+ EMP115 ,Employee 115,employee115@company.com,Human Resources,Product Manager,2022-10-24,Berlin,
+EMP116,Employee 116,employee116@company.com, Engineering ,Software Engineer,2025-05-05,London,EMP007
+EMP117,,employee117@company.com,Sales,Software Engineer,2025-05-06,Berlin,EMP014
+EMP118,Employee 118,employee118@company.com,Product,Marketing Specialist,2021-12-23,New York,EMP003
+EMP119,Employee 119,employee119@company.com,Product,Financial Analyst,2025-10-31,Sydney,
+EMP120,Employee 120,employee120@company.com, Finance ,Sales Executive,2022-03-02,Sydney,EMP011
+EMP121,,employee121@company.com, Operations ,Financial Analyst,2019-11-24,San Francisco,EMP005
+EMP122,Employee 122,employee122@company.com,Sales,Software Engineer,2020-11-05,London,EMP003
+EMP123,Employee 123,employee123@company.com,Sales,Sales Executive,2020-10-14,Toronto,EMP014
+EMP124,Employee 124,employee124@company.com, Engineering ,Software Engineer,2021-07-28,,EMP007
+emp125,Employee 125,employee125@company.com, Operations ,HR Generalist,2025-11-11,,EMP007
+EMP126,Employee 126,employee126@company.com,Sales,Operations Lead,2019-12-02,Berlin,
+EMP127,Employee 127,employee127@company.com,Product,Financial Analyst,2025-12-08,,EMP014
+EMP128,Employee 128,employee128@company.com,Human Resources,Marketing Specialist,2025-08-16,Sydney,EMP014
+EMP129,Employee 129,employee129@company.com, Engineering ,Operations Lead,2020-09-04,London,EMP005
+EMP130,Employee 130,employee130@company.com, Finance ,HR Generalist,2021-05-22,Berlin,EMP006
+EMP131,Employee 131,employee131@company.com,Product,Product Manager,2022-04-09,New York,EMP007
+EMP132,Employee 132,employee132@company.com, Finance ,Marketing Specialist,2022-05-18,Berlin,EMP004
+EMP133,Employee 133,employee133@company.com,Product,Product Manager,2020-10-26,Austin,EMP015
+EMP134,Employee 134,employee134@company.com, Engineering ,Software Engineer,2025-09-13,Austin,EMP003
+EMP135,Employee 135,employee135@company.com, Operations ,Marketing Specialist,2024-01-24,,EMP004
+EMP136,Employee 136,employee136@company.com, Operations ,Sales Executive,2021-01-18,Berlin,EMP001
+EMP137,Employee 137,employee137@company.com, Marketing ,Software Engineer,2022-09-23,London,EMP011
+EMP138,Employee 138,employee138@company.com, Operations ,Product Manager,2024-04-23,Austin,EMP001
+EMP139,Employee 139,employee139@company.com, Marketing ,Product Manager,2025-08-22,,EMP003
+EMP140,Employee 140,employee140@company.com, Operations ,Operations Lead,2021-03-17,Austin,EMP012
+EMP141,Employee 141,employee141@company.com, Marketing ,Financial Analyst,2021-08-17,London,EMP015
+EMP142,Employee 142,employee142@company.com,Sales,Product Manager,2022-05-28,Sydney,EMP001
+EMP143,Employee 143,employee143@company.com,Human Resources,Operations Lead,2021-10-13,Berlin,EMP015
+EMP144,Employee 144,employee144@company.com,Product,Marketing Specialist,2021-07-08,Austin,EMP015
+EMP145,Employee 145,employee145@company.com, Marketing ,Software Engineer,2025-05-28,Austin,EMP008
+EMP146,Employee 146,employee146@company.com,Human Resources,Marketing Specialist,2021-05-02,New York,
+ EMP147 ,Employee 147,employee147@company.com,Product,Operations Lead,2020-11-03,Berlin,EMP009
+EMP148,Employee 148,employee148@company.com, Engineering ,Financial Analyst,2022-09-12,San Francisco,
+EMP149,Employee 149,employee149@company.com,Product,HR Generalist,2021-09-29,San Francisco,EMP010
+EMP150,Employee 150,employee150@company.com,Product,Marketing Specialist,2024-02-26,San Francisco,EMP009

@@ -1,163 +1,134 @@
-# Customer Intelligence \& Churn Prediction Platform: Comprehensive Part 1 Documentation
+# Employee Intelligence & Attrition Platform: Comprehensive Part 1 Documentation
 
-This document provides an exhaustive, granular breakdown of **Part 1** of the Customer Intelligence and Churn Prediction Platform. It covers the complete journey of data from raw CSV uploads to mathematically engineered Machine Learning features.
+This document provides an exhaustive, granular breakdown of **Part 1** of the Employee Intelligence and Attrition Platform. It covers the complete journey of workforce data from raw CSV uploads to mathematically engineered Machine Learning features.
 
-Our goal in Part 1 is to solve the classic data engineering problem: *taking messy, disconnected, human-generated business data and transforming it into a pristine, unified numerical matrix that an Artificial Intelligence can interpret.*
+Our goal in Part 1 is to solve the classic data engineering problem: *taking messy, disconnected, human-generated HR data and transforming it into a pristine, unified numerical matrix that an Artificial Intelligence can interpret.*
 
-\---
+---
 
 ## Table of Contents
 
-1. [System Architecture \& Database Design](#1-system-architecture--database-design)
-2. [Data Ingestion \& The Cleaning Engine](#2-data-ingestion--the-cleaning-engine)
-3. [Exploratory Data Analysis (EDA) Engine](#3-exploratory-data-analysis-eda-engine)
-4. [Feature Engineering Pipeline (The 24 Features)](#4-feature-engineering-pipeline-the-24-features)
+1. [Project Vision & Business Scope](#1-project-vision--business-scope)
+2. [System Architecture & Database Design](#2-system-architecture--database-design)
+3. [Data Ingestion & The Cleaning Engine](#3-data-ingestion--the-cleaning-engine)
+4. [Exploratory Data Analysis (EDA) Engine](#4-exploratory-data-analysis-eda-engine)
+5. [Feature Engineering Pipeline (The 24 HR Features)](#5-feature-engineering-pipeline-the-24-hr-features)
 
-\---
+---
 
-## 1\. System Architecture \& Database Design
+## 1. Project Vision & Business Scope
 
-The platform relies on a normalized relational database (MySQL/SQLite) accessed via **SQLAlchemy** (an Object-Relational Mapper) in our FastAPI backend. The schema is divided into 6 core tables:
+### The Problem
+Modern enterprises generate vast amounts of fragmented workforce data across disparate HR systems (compensation, performance reviews, workload, attendance, HR tickets, training). Without a unified workforce data foundation and intelligent analytics, organizations struggle to accurately identify burnout risks, predict employee flight risk, optimize compensation structures, and prevent costly turnover.
 
-### The 5 Raw Tables
+### Target Users
+- **HR Business Partners & People Operations**: Identifying burnout risk and designing retention packages.
+- **Department Managers**: Understanding workload stress, overtime spikes, and team satisfaction.
+- **HR Data Scientists & Analysts**: Leveraging engineered workforce features for custom predictive models.
+- **C-Suite & Executives**: Tracking headcount, organizational attrition risk rates, average salary, and replacement costs.
 
-1. **`customers` (The Hub):** The central table. Every other table links back to this via `customer\_id` (Foreign Key). Contains demographic data (`location`, `sign\_up\_date`, `segment`).
-2. **`transactions` (Financials):** Logs every purchase. Tracks `amount`, `quantity`, `payment\_method`, and `status` (e.g., Completed, Refunded).
-3. **`products` (Catalog):** Links to transactions via `product\_id`. Stores `category`, `price`, and `cost`.
-4. **`support\_tickets` (Friction):** Tracks customer complaints. Contains `issue\_date`, `severity` (Low/Medium/High), and `csat\_score`.
-5. **`marketing\_campaigns` (Engagement):** Tracks outbound interactions. Contains flags for `opened`, `clicked`, and `converted`.
-6. **`customer\_behavior` (Usage):** Tracks platform usage via `website\_visits`, `app\_sessions`, and `avg\_session\_duration`.
+---
+
+## 2. System Architecture & Database Design
+
+The platform relies on a normalized relational database (MySQL) accessed via **SQLAlchemy** (an Object-Relational Mapper) in our FastAPI backend. The schema is divided into 6 core HR tables and 1 derived feature store:
+
+```text
+User (React 18 Frontend)
+        │
+        ▼ (REST HTTP Requests)
+FastAPI Backend Server (`backend/app/main.py`)
+   ├── /api/upload/{dataset_type}   ──> DataCleanerService (`data_cleaner.py`)
+   ├── /api/eda/*                  ──> SQL Aggregations on MySQL tables (`routes_eda.py`)
+   ├── /api/ml/calculate-features  ──> FeatureEngineeringService (`feature_engineering.py`)
+   └── /api/models/*               ──> MLEngineService (`ml_engine.py`)
+        │
+        ▼ (SQLAlchemy ORM)
+MySQL Database (`attrition_database`)
+   ├── employees (The Primary Hub)
+   ├── compensation (Financial Records)
+   ├── performance_reviews (Appraisals)
+   ├── workload_attendance (Hours & Remote Days)
+   ├── hr_tickets (Friction & Complaints)
+   ├── training_engagement (Skills & Growth)
+   └── employee_features (24-Feature ML Matrix)
+```
+
+### The 6 Raw HR Tables
+
+1. **`employees` (The Hub):** The central table. Every other table links back to this via `employee_id` (Foreign Key). Contains demographic and role data (`name`, `email`, `department`, `job_role`, `hire_date`, `location`, `manager_id`).
+2. **`compensation` (Financials):** Logs `salary`, `bonus`, `stock_options`, and `effective_date`.
+3. **`performance_reviews` (Appraisals):** Tracks historic performance ratings (`rating` on a 1–5 scale), `promotion_given` (boolean), and `manager_feedback_score`.
+4. **`workload_attendance` (Workload & Burnout):** Logs `weekly_hours`, `overtime_hours`, `sick_leaves_taken`, and `remote_days`.
+5. **`hr_tickets` (Friction & Culture):** Tracks employee complaints (`issue_date`, `resolution_date`, `category`, `severity`, `status`, `satisfaction_score`).
+6. **`training_engagement` (Skills & Growth):** Tracks training courses (`training_name`, `event_date`, `completed`, `score`).
 
 ### The Derived Table
 
-* **`customer\_features` (The AI Input):** A strictly numerical table containing 1 row per customer and exactly 24 computed metrics. This is the ultimate output of Part 1.
+* **`employee_features` (The AI Input):** A strictly numerical table containing 1 row per employee and exactly 24 computed metrics. This is the ultimate output of Part 1.
 
-\---
+---
 
-## 2\. Data Ingestion \& The Cleaning Engine
+## 3. Data Ingestion & The Cleaning Engine
 
-Real-world CSV data uploaded by businesses is inherently dirty. It contains blanks, string-casing inconsistencies, missing Primary Keys, and extreme typographical errors.
+Real-world HR CSV data uploaded by companies is inherently dirty. It contains blank values, string-casing inconsistencies, missing primary keys, negative overtime hours, and salary typographical errors.
 
-When a user uploads a CSV in the React frontend, it hits our **FastAPI upload routes**. It is immediately intercepted by the `DataCleanerService` (powered by Pandas).
+When an HR admin uploads a CSV in the React frontend, it hits our **FastAPI upload routes**. It is immediately processed by the `DataCleanerService` (powered by Pandas).
 
-### The 4 Pillars of Data Cleaning Applied:
+### Cleaning Principles Applied:
 
-#### A. ID Generation \& Constraint Satisfaction
+* **Chunked Ingestion**: Reads CSV uploads in chunks of 10,000 rows to prevent memory overflow (`pd.read_csv(..., chunksize=10000)`).
+* **ID Generation & Constraint Satisfaction**: If primary keys are missing (e.g. `comp_id`, `ticket_id`, `event_id`), the cleaner automatically generates UUIDs.
+* **Intelligent Imputation**: Fills numerical missing values with medians and missing text fields (e.g. `location`, `department`) with `"Unknown"`.
+* **Outlier Winsorization**: Caps salary outliers (>99th percentile) to prevent typos ($999,999) from destroying company average compensation statistics.
+* **Negative Value Correction**: Resets negative overtime hours (<0) to 0.
+* **Schema Hardening**: Columns are stripped of whitespace and dates are parsed with `pd.to_datetime(errors='coerce')`.
+* **Smart Upserting**: Handles duplicate re-uploads smoothly by updating existing employee records without raising primary key collision exceptions.
+* **Dataset Health Score**: Calculates dataset hygiene percentage:
+  $$\text{Health Score} = \frac{\text{Inserted Rows}}{\text{Total Rows}} \times 100 - (\text{Imputed Cell } \% \times 0.5)$$
 
-Relational databases crash if Primary Keys are missing.
+---
 
-* **Example:** The raw Marketing logs often lack a unique ID for the email sent. The `\_clean\_marketing` function detects this and automatically generates a standard `UUID` (`interaction\_id`) for every single row before inserting it into MySQL.
+## 4. Exploratory Data Analysis (EDA) Engine
 
-#### B. Intelligent Imputation (Filling the Blanks)
+Once data is clean, HR leaders need immediate visual analytics. We built an interactive React Dashboard (`Dashboard.jsx`) powered by `recharts`:
 
-Machine Learning models cannot process `NULL` values. We use mathematical strategies to fill them:
+1. **`/api/eda/kpis` (Executive Summary)**: Returns Total Headcount, Org Attrition Risk Rate %, Average Salary, and Org Satisfaction Score.
+2. **`/api/eda/department-attrition` (Flight Risk by Dept)**: Renders a BarChart showing flight risk percentage per department.
+3. **`/api/eda/overtime-vs-satisfaction` (Burnout Analytics)**: Renders a ComposedChart comparing average weekly overtime hours against satisfaction scores.
+4. **`/api/eda/compensation-trends` (Pay Structure)**: Renders average salary per department.
+5. **`/api/eda/hr-ticket-analysis` (Culture & Friction)**: Analyzes complaint volume and CSAT grouped by severity (Low, Medium, High).
 
-* **Continuous Variables (Numbers):** If a transaction is missing its `amount` (e.g., `CUST004` had a blank amount), the engine calculates the **median** transaction amount of the entire dataset (e.g., `$13.50`) and injects it. Median is used over Mean because it is resilient to extreme outliers.
-* **Categorical Variables (Text):** If a customer is missing a `location` or `segment`, the engine fills it with the string `"Unknown"` to maintain structural integrity.
+---
 
-#### C. Outlier Winsorization (The $9.6 Million T-Shirt)
+## 5. Feature Engineering Pipeline (The 24 HR Features)
 
-Outliers destroy average calculations.
+The `FeatureEngineeringService` takes raw logs across 6 tables and mathematically flattens them into a single 24-column vector per employee.
 
-* **Real Scenario:** In our raw data, `CUST002` accidentally had a transaction logged for **$9,699,999.48**.
-* **The Solution:** We apply statistical *Winsorization*. The engine calculates the 99th percentile of all valid purchases in the dataset (e.g., `$9,600,000`). Any transaction exceeding that amount is forcibly clamped down to that 99th percentile ceiling. This preserves the record without allowing a typo to skew the Average Order Value to infinity.
+### The 24 Engineered HR Features:
 
-#### D. Schema Hardening
-
-The pandas dataframe columns are rigidly cast to match the SQLAlchemy `models.py` definitions. Strings are stripped of whitespace, and datetime columns are parsed using `pd.to\_datetime(errors='coerce')` to catch impossible dates (like "Feb 30th").
-
-\---
-
-## 3\. Exploratory Data Analysis (EDA) Engine
-
-Once data is clean, the business needs to see it. We built an interactive React Dashboard (`Dashboard.jsx`) that visualizes the state of the business using the `recharts` library. The EDA engine is designed to instantly compute business intelligence from raw data. The frontend fetches data concurrently using `Promise.all()` from 5 specific `/api/eda/` endpoints that perform advanced SQL aggregations on the fly using SQLAlchemy in FastAPI.
-
-### Detailed EDA Implementation:
-
-1. **`/api/eda/kpis` (Executive Summary)**: 
-   * **Concept:** Calculates top-level baseline metrics required by stakeholders.
-   * **Implementation:** It queries the `customers` table for `total_customers`, and the `transactions` table for `total_revenue`. It calculates a 30-Day MRR by filtering transactions from the last 30 days, and determines a historic CLV baseline.
-   
-2. **`/api/eda/revenue-trends` (Time-Series Analysis)**: 
-   * **Concept:** Visualizes how revenue changes over time to identify seasonality or growth trends.
-   * **Implementation:** Performs a `GROUP BY DATE(transaction_date)` SQL aggregation. The frontend maps this array into a Recharts `<LineChart>`, plotting `revenue` over `date` with tooltips for interactive hovering.
-   
-3. **`/api/eda/customer-locations` (Geographic Density)**: 
-   * **Concept:** Identifies where the customer base is physically located.
-   * **Implementation:** Performs a `COUNT()` on the `customers` table grouped by `location`. Rendered as a horizontal `<BarChart>` to accommodate long city names on the Y-axis.
-   
-4. **`/api/eda/marketing-clv` (Channel ROI)**: 
-   * **Concept:** Measures which marketing channel brings in the most valuable customers.
-   * **Implementation:** This is a complex endpoint executing an inner join across 3 tables: `marketing_campaigns`, `customers`, and `transactions`. It groups by marketing `channel` (e.g., Email, Social, Search) and calculates the `Average Spend` (`AVG(amount)`) of customers acquired through that channel. Visualized as a green `<BarChart>`.
-   
-5. **`/api/eda/support-csat` (Friction vs. Satisfaction)**: 
-   * **Concept:** Analyzes the relationship between support ticket volume, ticket severity, and customer satisfaction (CSAT).
-   * **Implementation:** Groups by ticket `severity` (High/Medium/Low), calculates the `COUNT()` of tickets (volume), and the `AVG(csat_score)`. The UI utilizes a `<ComposedChart>` to overlay a line graph (Avg CSAT) on top of a bar chart (Ticket Volume) using a dual Y-axis layout.
-
-\---
-
-## 4\. Feature Engineering Pipeline (The 24 Features)
-
-The ultimate goal of Part 1. The `FeatureEngineeringService` takes thousands of distinct, timestamped logs across 5 tables and mathematically flattens them into a single 24-column vector per customer.
-
-### The Hidden Casing Bug \& Standardization
-
-During development, we encountered a critical data engineering bug: Pandas merges are strictly case-sensitive. The `customers` table used uppercase IDs (`CUST001`), while `transactions` used lowercase (`cust001`). This caused all merges to fail silently, resulting in features being evaluated as `0`.
-
-* **The Fix:** The pipeline now forces a `.astype(str).str.lower().str.strip()` on all `customer\_id` columns across all 5 DataFrames immediately upon loading, ensuring mathematically perfect JOINs.
-
-### The 24 Engineered Features Breakdown
-
-The pipeline categorizes features into 6 distinct groups. Here is exactly how they are calculated:
-
-#### Group 1: RFM Core (Recency, Frequency, Monetary)
-
-1. **`tenure\_days`**: `Current Date` minus `sign\_up\_date`. How long they have been a customer.
-2. **`total\_purchase\_frequency`**: A direct `COUNT()` of `Completed` transactions.
-3. **`total\_monetary\_value`**: The `SUM()` of the `amount` of all `Completed` transactions.
-4. **`avg\_order\_value`**: `total\_monetary\_value` / `total\_purchase\_frequency`.
-5. **`days\_since\_last\_purchase`**: `Current Date` minus the `MAX(transaction\_date)`. A highly predictive churn signal.
-6. **`order\_velocity\_days`**: The time between their first and last purchase, divided by `(frequency - 1)`. Shows their natural buying rhythm.
-7. **`refund\_ratio`**: Total refunded amount divided by total gross amount. (High ratio = high churn risk).
-
-#### Group 2: Product Diversity
-
-8. **`unique\_categories\_bought`**: A count of distinct product categories they have purchased from.
-9. **`cross\_sell\_ratio`**: `(Frequency - Unique Categories) / Frequency`. A ratio near 0 means they explore the catalog; a ratio near 1 means they only buy one specific thing.
-10. **`avg\_quantity\_per\_order`**: The mean of the `quantity` column.
-
-#### Group 3: Behavioral Engagement
-
-11. **`total\_sessions`**: The sum of `website\_visits` and `app\_sessions`.
-12. **`days\_since\_last\_visit`**: `Current Date` minus the last login date.
-13. **`session\_to\_purchase\_rate`**: `total\_purchase\_frequency` / `total\_sessions`. Conversion efficiency.
-
-#### Group 4: Marketing Receptivity
-
-14. **`total\_campaigns\_received`**: Count of all emails/ads sent to the user.
-15. **`email\_ctr` (Click-Through Rate)**: Total `clicked` flags / Total `opened` flags. Measures engagement with outbound marketing.
-16. **`marketing\_opt\_out`**: Boolean flag indicating if they unsubscribed.
-
-#### Group 5: Support Friction
-
-17. **`total\_support\_tickets`**: Count of all tickets opened.
-18. **`days\_since\_last\_ticket`**: `Current Date` minus the last ticket `issue\_date`.
-19. **`high\_severity\_tickets`**: Count of tickets where `severity == 'High'`.
-
-#### Group 6: Composites \& ML Targets (The "Magic" Scores)
-
-20. **`spend\_velocity`**: Currently set as a baseline trend variable.
-21. **`customer\_health\_score` (0-100)**:
-
-    * *Calculation:* Starts at 50. We add an Activity Score (using `log1p(purchases)\*20 + log1p(sessions)\*10`) and subtract a Friction Score (`support\_tickets\*5 + high\_severity\*15 + refund\_ratio\*50`). We use natural logarithms (`log1p`) so that extreme power-users don't break the 0-100 scale.
-22. **`churn\_risk\_score` (0-1)**: A baseline proxy heuristic. Penalizes for high `days\_since\_last\_purchase` and boosts for high frequency.
-23. **`predicted\_clv`**: An initial heuristic baseline calculation: `avg\_order\_value` \* `purchases\_per\_month` \* `12 months` \* `30% profit margin`.
-24. **`customer\_segment`**: A categorical label based on health thresholds (e.g., "Champion", "At Risk", "Active", "Hibernating").
-
-### Final Output
-
-Once all calculations are performed in Pandas, the script handles `NaN` and `Inf` cleanup (replacing them with `0`) and executes a massive `bulk\_insert\_mappings` via SQLAlchemy back into the `customer\_features` MySQL table.
-
-This completely numerical, highly contextual 24-dimension table is exactly what the Machine Learning models use to train the predictive AI.
-
-
+1. **`tenure_years`**: Years employed: $\frac{\text{Current Date} - \text{hire\_date}}{365.0}$.
+2. **`years_since_last_promotion`**: Years since last `promotion_given == True` (or `tenure_years` if never promoted).
+3. **`salary_growth_rate`**: Percentage growth between initial and current salary: $\frac{\text{salary}_{\text{latest}} - \text{salary}_{\text{first}}}{\text{salary}_{\text{first}}}$.
+4. **`total_compensation`**: $\text{salary} + \text{bonus} + \text{stock\_options}$.
+5. **`avg_weekly_hours`**: Mean weekly hours worked from `workload_attendance`.
+6. **`avg_overtime_hours`**: Mean weekly overtime hours (Primary burnout indicator).
+7. **`workload_stress_index`**: $\text{avg\_weekly\_hours} + (\text{avg\_overtime\_hours} \times 1.5)$.
+8. **`sick_leave_ratio`**: $\frac{\text{Total sick leaves taken}}{\text{tenure\_months}}$.
+9. **`remote_work_ratio`**: Remote days / total working days ratio.
+10. **`total_hr_complaints`**: Count of HR tickets opened.
+11. **`high_severity_tickets`**: Count of tickets where $\text{severity} == \text{'High'}$.
+12. **`days_since_last_complaint`**: $\text{Current Date} - \max(\text{issue\_date})$.
+13. **`avg_hr_satisfaction`**: Mean satisfaction score on HR tickets.
+14. **`latest_performance_rating`**: Most recent performance appraisal (1–5 scale).
+15. **`avg_performance_rating`**: Historic mean rating across all reviews.
+16. **`rating_trend`**: $\text{latest\_performance\_rating} - \text{avg\_performance\_rating}$.
+17. **`trainings_completed`**: Count of completed training events.
+18. **`training_score_avg`**: Mean test score across all completed training courses.
+19. **`manager_tenure_years`**: Estimated time spent under current manager.
+20. **`promotion_velocity`**: $\frac{\text{total\_promotions}}{\text{tenure\_years}}$.
+21. **`employee_satisfaction_score` (0–100)**: Derived engagement score:
+   $$\text{Satisfaction} = \text{clip}(50 + \text{rating} \times 10 + \text{training\_ratio} \times 20 - \text{complaints} \times 8 - \text{high\_sev} \times 15 - \text{overtime} \times 0.5, 0, 100)$$
+22. **`attrition_risk_score` (0.0–1.0)**: Initial baseline flight risk heuristic combining overtime stress, promotion stagnation, satisfaction deficit, and severe complaints.
+23. **`estimated_replacement_cost`**: $\text{salary} \times 0.5$ (Standard HR industry benchmark for turnover cost).
+24. **`employee_segment`**: Persona label (*High Performer*, *Burnout Risk*, *Underperforming*, *Core Employee*).

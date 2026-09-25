@@ -2,141 +2,138 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, Date, Boolean, 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.db.database import Base
-from datetime import datetime
 
-class Customer(Base):
-    __tablename__ = "customers"
+class Employee(Base):
+    __tablename__ = "employees"
 
-    customer_id = Column(String(50), primary_key=True, index=True)
+    employee_id = Column(String(50), primary_key=True, index=True)
     name = Column(String(100), nullable=True)
     email = Column(String(100), unique=True, index=True, nullable=False)
-    phone = Column(String(20), nullable=True)
+    department = Column(String(100), nullable=True)
+    job_role = Column(String(100), nullable=True)
+    hire_date = Column(Date, nullable=False)
     location = Column(String(100), nullable=True)
-    sign_up_date = Column(Date, nullable=False)
-    segment = Column(String(50), nullable=True)
+    manager_id = Column(String(50), nullable=True)
 
     # Relationships
-    transactions = relationship("Transaction", back_populates="customer")
-    behaviors = relationship("CustomerBehavior", back_populates="customer")
-    tickets = relationship("SupportTicket", back_populates="customer")
-    campaigns = relationship("MarketingCampaign", back_populates="customer")
-    features = relationship("CustomerFeature", back_populates="customer", uselist=False)
+    compensation = relationship("Compensation", back_populates="employee")
+    performance_reviews = relationship("PerformanceReview", back_populates="employee")
+    workload = relationship("WorkloadAttendance", back_populates="employee")
+    hr_tickets = relationship("HRTicket", back_populates="employee")
+    training = relationship("TrainingEngagement", back_populates="employee")
+    features = relationship("EmployeeFeature", back_populates="employee", uselist=False)
 
-class Product(Base):
-    __tablename__ = "products"
+class Compensation(Base):
+    __tablename__ = "compensation"
 
-    product_id = Column(String(50), primary_key=True, index=True)
-    product_name = Column(String(150), nullable=False)
-    category = Column(String(100), nullable=True)
-    price = Column(Float, nullable=False)
-    cost = Column(Float, nullable=True)
-
-    # Relationships
-    transactions = relationship("Transaction", back_populates="product")
-
-class Transaction(Base):
-    __tablename__ = "transactions"
-
-    transaction_id = Column(String(50), primary_key=True, index=True)
-    customer_id = Column(String(50), ForeignKey("customers.customer_id"), nullable=False, index=True)
-    product_id = Column(String(50), ForeignKey("products.product_id"), nullable=True, index=True)
-    transaction_date = Column(DateTime, nullable=False, index=True)
-    amount = Column(Float, nullable=False)
-    quantity = Column(Integer, default=1)
-    payment_method = Column(String(50), nullable=True)
-    status = Column(String(50), nullable=False)
+    comp_id = Column(String(50), primary_key=True, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), nullable=False, index=True)
+    salary = Column(Float, nullable=False)
+    bonus = Column(Float, default=0.0)
+    stock_options = Column(Float, default=0.0)
+    effective_date = Column(Date, nullable=False)
 
     # Relationships
-    customer = relationship("Customer", back_populates="transactions")
-    product = relationship("Product", back_populates="transactions")
+    employee = relationship("Employee", back_populates="compensation")
 
-class CustomerBehavior(Base):
-    __tablename__ = "customer_behavior"
+class PerformanceReview(Base):
+    __tablename__ = "performance_reviews"
 
-    behavior_id = Column(String(50), primary_key=True, index=True)
-    customer_id = Column(String(50), ForeignKey("customers.customer_id"), nullable=False, index=True)
+    review_id = Column(String(50), primary_key=True, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), nullable=False, index=True)
+    review_date = Column(Date, nullable=False)
+    rating = Column(Integer, nullable=True)  # 1-5 scale
+    promotion_given = Column(Boolean, default=False)
+    manager_feedback_score = Column(Float, nullable=True)
+
+    # Relationships
+    employee = relationship("Employee", back_populates="performance_reviews")
+
+class WorkloadAttendance(Base):
+    __tablename__ = "workload_attendance"
+
+    workload_id = Column(String(50), primary_key=True, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), nullable=False, index=True)
     log_date = Column(Date, nullable=False)
-    website_visits = Column(Integer, default=0)
-    app_sessions = Column(Integer, default=0)
-    page_views = Column(Integer, default=0)
-    avg_session_duration = Column(Float, default=0.0)
+    weekly_hours = Column(Float, default=40.0)
+    overtime_hours = Column(Float, default=0.0)
+    sick_leaves_taken = Column(Integer, default=0)
+    remote_days = Column(Integer, default=0)
 
     # Relationships
-    customer = relationship("Customer", back_populates="behaviors")
+    employee = relationship("Employee", back_populates="workload")
 
-class SupportTicket(Base):
-    __tablename__ = "support_tickets"
+class HRTicket(Base):
+    __tablename__ = "hr_tickets"
 
     ticket_id = Column(String(50), primary_key=True, index=True)
-    customer_id = Column(String(50), ForeignKey("customers.customer_id"), nullable=False, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), nullable=False, index=True)
     issue_date = Column(DateTime, nullable=False)
     resolution_date = Column(DateTime, nullable=True)
-    category = Column(String(100), nullable=True)
-    severity = Column(String(50), nullable=True)
-    status = Column(String(50), nullable=False)
-    csat_score = Column(Integer, nullable=True)
+    category = Column(String(100), nullable=True)   # Compensation, Culture, Workload
+    severity = Column(String(50), nullable=True)    # Low, Medium, High
+    status = Column(String(50), nullable=False, default="Open")
+    satisfaction_score = Column(Integer, nullable=True) # 1-5 scale
 
     # Relationships
-    customer = relationship("Customer", back_populates="tickets")
+    employee = relationship("Employee", back_populates="hr_tickets")
 
-class MarketingCampaign(Base):
-    __tablename__ = "marketing_campaigns"
+class TrainingEngagement(Base):
+    __tablename__ = "training_engagement"
 
-    interaction_id = Column(String(50), primary_key=True, index=True)
-    customer_id = Column(String(50), ForeignKey("customers.customer_id"), nullable=False, index=True)
-    campaign_id = Column(String(100), nullable=False)
-    channel = Column(String(50), nullable=True)
-    send_date = Column(Date, nullable=False)
-    opened = Column(Boolean, default=False)
-    clicked = Column(Boolean, default=False)
-    converted = Column(Boolean, default=False)
+    event_id = Column(String(50), primary_key=True, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), nullable=False, index=True)
+    training_name = Column(String(150), nullable=False)
+    event_date = Column(Date, nullable=False)
+    completed = Column(Boolean, default=False)
+    score = Column(Float, nullable=True)
 
     # Relationships
-    customer = relationship("Customer", back_populates="campaigns")
+    employee = relationship("Employee", back_populates="training")
 
-class CustomerFeature(Base):
-    __tablename__ = "customer_features"
+class EmployeeFeature(Base):
+    __tablename__ = "employee_features"
 
-    customer_id = Column(String(50), ForeignKey("customers.customer_id"), primary_key=True, index=True)
+    employee_id = Column(String(50), ForeignKey("employees.employee_id"), primary_key=True, index=True)
     
-    # 1. RFM Core
-    tenure_days = Column(Integer, nullable=True)
-    total_purchase_frequency = Column(Integer, nullable=True)
-    total_monetary_value = Column(Float, nullable=True)
-    avg_order_value = Column(Float, nullable=True)
-    days_since_last_purchase = Column(Integer, nullable=True)
-    order_velocity_days = Column(Float, nullable=True)
-    refund_ratio = Column(Float, nullable=True)
+    # 1. Tenure & Career Growth
+    tenure_years = Column(Float, nullable=True)
+    years_since_last_promotion = Column(Float, nullable=True)
+    promotion_velocity = Column(Float, nullable=True)
+    manager_tenure_years = Column(Float, nullable=True)
+
+    # 2. Compensation & Value
+    salary_growth_rate = Column(Float, nullable=True)
+    total_compensation = Column(Float, nullable=True)
     
-    # 2. Product Diversity
-    unique_categories_bought = Column(Integer, nullable=True)
-    cross_sell_ratio = Column(Float, nullable=True)
-    avg_quantity_per_order = Column(Float, nullable=True)
+    # 3. Workload & Burnout
+    avg_weekly_hours = Column(Float, nullable=True)
+    avg_overtime_hours = Column(Float, nullable=True)
+    workload_stress_index = Column(Float, nullable=True)
+    sick_leave_ratio = Column(Float, nullable=True)
+    remote_work_ratio = Column(Float, nullable=True)
     
-    # 3. Behavior
-    total_sessions = Column(Integer, nullable=True)
-    days_since_last_visit = Column(Integer, nullable=True)
-    session_to_purchase_rate = Column(Float, nullable=True)
-    
-    # 4. Marketing
-    total_campaigns_received = Column(Integer, nullable=True)
-    email_ctr = Column(Float, nullable=True)
-    marketing_opt_out = Column(Boolean, default=False)
-    
-    # 5. Support
-    total_support_tickets = Column(Integer, nullable=True)
-    days_since_last_ticket = Column(Integer, nullable=True)
+    # 4. HR Friction & Complaints
+    total_hr_complaints = Column(Integer, nullable=True)
     high_severity_tickets = Column(Integer, nullable=True)
+    days_since_last_complaint = Column(Integer, nullable=True)
+    avg_hr_satisfaction = Column(Float, nullable=True)
     
-    # 6. ML Targets
-    spend_velocity = Column(Float, nullable=True)
-    customer_health_score = Column(Float, nullable=True)
-    churn_risk_score = Column(Float, nullable=True)
-    predicted_clv = Column(Float, nullable=True)
-    customer_segment = Column(String(50), nullable=True)
+    # 5. Performance & Engagement
+    latest_performance_rating = Column(Float, nullable=True)
+    avg_performance_rating = Column(Float, nullable=True)
+    rating_trend = Column(Float, nullable=True)
+    trainings_completed = Column(Integer, nullable=True)
+    training_score_avg = Column(Float, nullable=True)
+    
+    # 6. Target Scores & Segment
+    employee_satisfaction_score = Column(Float, nullable=True)  # 0 - 100
+    attrition_risk_score = Column(Float, nullable=True)         # 0.0 - 1.0
+    estimated_replacement_cost = Column(Float, nullable=True)   # $
+    employee_segment = Column(String(50), nullable=True)        # High Performer, Burnout Risk, etc.
 
     # Relationships
-    customer = relationship("Customer", back_populates="features")
+    employee = relationship("Employee", back_populates="features")
 
 class JobStatus(Base):
     __tablename__ = "job_status"

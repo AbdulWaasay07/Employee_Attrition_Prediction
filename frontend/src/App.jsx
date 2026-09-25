@@ -4,18 +4,18 @@ import MLDashboard from './MLDashboard';
 import './App.css';
 
 const schemas = {
-  customers: ["customer_id", "name", "email", "phone", "location", "sign_up_date"],
-  transactions: ["transaction_id", "customer_id", "product_id", "transaction_date", "amount", "quantity", "payment_method", "status"],
-  products: ["product_id", "product_name", "price"],
-  customer_behavior: ["behavior_id", "customer_id", "log_date", "website_visits", "app_sessions", "page_views", "avg_session_duration"],
-  support: ["ticket_id", "customer_id", "issue_date", "resolution_date", "category", "severity", "status", "csat_score"],
-  marketing: ["customer_id", "campaign_id", "channel", "send_date", "opened", "clicked", "converted"]
+  employees: ["employee_id", "name", "email", "department", "job_role", "hire_date", "location", "manager_id"],
+  compensation: ["comp_id", "employee_id", "salary", "bonus", "stock_options", "effective_date"],
+  performance: ["review_id", "employee_id", "review_date", "rating", "promotion_given", "manager_feedback_score"],
+  workload: ["workload_id", "employee_id", "log_date", "weekly_hours", "overtime_hours", "sick_leaves_taken", "remote_days"],
+  hr_tickets: ["ticket_id", "employee_id", "issue_date", "resolution_date", "category", "severity", "status", "satisfaction_score"],
+  training: ["event_id", "employee_id", "training_name", "event_date", "completed", "score"]
 };
 
 function App() {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload', 'dashboard', or 'ml'
   
-  const [datasetType, setDatasetType] = useState('customers');
+  const [datasetType, setDatasetType] = useState('employees');
   const [file, setFile] = useState(null);
   const [csvHeaders, setCsvHeaders] = useState([]);
   const [mapping, setMapping] = useState({});
@@ -46,7 +46,7 @@ function App() {
         });
         setMapping(initialMapping);
       };
-      reader.readAsText(selectedFile.slice(0, 5000)); // Read just the beginning of the file
+      reader.readAsText(selectedFile.slice(0, 5000));
     } else {
       setCsvHeaders([]);
     }
@@ -54,14 +54,13 @@ function App() {
 
   const handleDatasetTypeChange = (e) => {
     setDatasetType(e.target.value);
-    setMapping({}); // Reset mapping on type change
+    setMapping({});
   };
 
   const handleMappingChange = (requiredCol, csvCol) => {
     setMapping(prev => {
       const newMapping = { ...prev };
       
-      // If they selected "-- Ignore --", we need to remove any existing mapping for this required col
       if (!csvCol) {
         Object.keys(newMapping).forEach(key => {
           if (newMapping[key] === requiredCol) delete newMapping[key];
@@ -69,7 +68,6 @@ function App() {
         return newMapping;
       }
       
-      // Otherwise, map the chosen csvCol to the requiredCol
       newMapping[csvCol] = requiredCol;
       return newMapping;
     });
@@ -112,7 +110,7 @@ function App() {
     <div className="app-layout">
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <h2>ChurnX</h2>
+          <h2>AttritionX</h2>
         </div>
         <nav className="sidebar-nav">
           <button 
@@ -125,13 +123,13 @@ function App() {
             className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard')}
           >
-            EDA Dashboard
+            HR EDA Dashboard
           </button>
           <button 
             className={`nav-btn ${activeTab === 'ml' ? 'active' : ''}`}
             onClick={() => setActiveTab('ml')}
           >
-            AI & Recommendations
+            AI Attrition Engine
           </button>
         </nav>
       </aside>
@@ -144,70 +142,69 @@ function App() {
         ) : (
           <div className="container">
             <header className="header">
-              <h1>Universal Data Importer</h1>
-              <p>Map your CSV files directly into the platform</p>
+              <h1>HR Data Importer</h1>
+              <p>Map your HR CSV datasets directly into the Attrition Platform</p>
             </header>
 
             <div className="upload-card">
-        <div className="form-group">
-          <label>1. Select Dataset Type</label>
-          <select value={datasetType} onChange={handleDatasetTypeChange}>
-            {Object.keys(schemas).map(type => (
-              <option key={type} value={type}>{type.toUpperCase()}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>2. Upload CSV File</label>
-          <input type="file" accept=".csv" onChange={handleFileChange} />
-        </div>
-
-        {csvHeaders.length > 0 && (
-          <div className="mapping-section">
-            <h3>3. Map Your Columns</h3>
-            <p className="subtitle">Match our required database columns to your CSV headers.</p>
-            
-            <div className="mapper-grid">
-              <div className="mapper-header">Required DB Column</div>
-              <div className="mapper-header">Your CSV Column</div>
-              
-              {requiredColumns.map(reqCol => {
-                // Find what CSV header is currently mapped to this required column
-                const mappedCsvHeader = Object.keys(mapping).find(key => mapping[key] === reqCol) || "";
-                
-                return (
-                  <div key={reqCol} className="mapper-row">
-                    <div className="req-col-name">{reqCol} <span className="asterisk">*</span></div>
-                    <select 
-                      value={mappedCsvHeader}
-                      onChange={(e) => handleMappingChange(reqCol, e.target.value)}
-                    >
-                      <option value="">-- Ignore / Use Default --</option>
-                      {csvHeaders.map(header => (
-                        <option key={header} value={header}>{header}</option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              })}
-            </div>
-
-            <button 
-              className="upload-button" 
-              onClick={handleUpload}
-              disabled={uploadStatus === "Uploading..."}
-            >
-              {uploadStatus === "Uploading..." ? "Processing..." : "Run Upload & Process Pipeline"}
-            </button>
-            
-            {uploadStatus && (
-              <div className={`status-message ${uploadStatus.includes("Error") ? "error" : "success"}`}>
-                {uploadStatus}
+              <div className="form-group">
+                <label>1. Select HR Dataset Type</label>
+                <select value={datasetType} onChange={handleDatasetTypeChange}>
+                  {Object.keys(schemas).map(type => (
+                    <option key={type} value={type}>{type.toUpperCase()}</option>
+                  ))}
+                </select>
               </div>
-            )}
-          </div>
-        )}
+
+              <div className="form-group">
+                <label>2. Upload HR CSV File</label>
+                <input type="file" accept=".csv" onChange={handleFileChange} />
+              </div>
+
+              {csvHeaders.length > 0 && (
+                <div className="mapping-section">
+                  <h3>3. Map Your Columns</h3>
+                  <p className="subtitle">Match required database schema attributes to your CSV headers.</p>
+                  
+                  <div className="mapper-grid">
+                    <div className="mapper-header">Required DB Column</div>
+                    <div className="mapper-header">Your CSV Column</div>
+                    
+                    {requiredColumns.map(reqCol => {
+                      const mappedCsvHeader = Object.keys(mapping).find(key => mapping[key] === reqCol) || "";
+                      
+                      return (
+                        <div key={reqCol} className="mapper-row">
+                          <div className="req-col-name">{reqCol} <span className="asterisk">*</span></div>
+                          <select 
+                            value={mappedCsvHeader}
+                            onChange={(e) => handleMappingChange(reqCol, e.target.value)}
+                          >
+                            <option value="">-- Ignore / Use Default --</option>
+                            {csvHeaders.map(header => (
+                              <option key={header} value={header}>{header}</option>
+                            ))}
+                          </select>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <button 
+                    className="upload-button" 
+                    onClick={handleUpload}
+                    disabled={uploadStatus === "Uploading..."}
+                  >
+                    {uploadStatus === "Uploading..." ? "Processing..." : "Run Upload & Cleaning Pipeline"}
+                  </button>
+                  
+                  {uploadStatus && (
+                    <div className={`status-message ${uploadStatus.includes("Error") || uploadStatus.includes("Failed") ? "error" : "success"}`}>
+                      {uploadStatus}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}

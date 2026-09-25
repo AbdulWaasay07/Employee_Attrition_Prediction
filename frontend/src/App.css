@@ -406,7 +406,7 @@ button:disabled {
   100% { opacity: 0.7; }
 }
 
-.customer-selector select {
+.customer-selector select, .employee-selector select {
   max-width: 300px;
   margin-top: 0.5rem;
   cursor: pointer;

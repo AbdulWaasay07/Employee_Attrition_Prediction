@@ -2,13 +2,12 @@ import pandas as pd
 import numpy as np
 from sqlalchemy.orm import Session
 from app.db.database import engine
-from app.db.models import CustomerFeature, Customer
+from app.db.models import EmployeeFeature, Employee
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import xgboost as xgb
 import joblib
 import os
-import shap
 
 MODELS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "models")
 os.makedirs(MODELS_DIR, exist_ok=True)
@@ -17,102 +16,124 @@ class MLEngineService:
     @staticmethod
     def train_segmentation_model(db: Session):
         """
-        Trains K-Means clustering on the RFM features and assigns personas.
+        Trains K-Means clustering on employee features and assigns personas:
+        - High Performers (Low Risk)
+        - Burnout / Flight Risk
+        - Underutilized / Stagnant
         """
-        df = pd.read_sql("SELECT * FROM customer_features", engine)
+        df = pd.read_sql("SELECT * FROM employee_features", engine)
         if len(df) < 3:
-            return {"status": "error", "message": "Need at least 3 customers to train segmentation."}
+            return {"status": "error", "message": "Need at least 3 employees to train segmentation."}
 
-        # Select RFM features for clustering
-        features = ["days_since_last_purchase", "total_purchase_frequency", "total_monetary_value"]
+        # Features used: tenure_years, avg_overtime_hours, salary_growth_rate, latest_performance_rating
+        features = ["tenure_years", "avg_overtime_hours", "salary_growth_rate", "latest_performance_rating"]
+        for f in features:
+            if f not in df.columns:
+                df[f] = 0.0
+            else:
+                df[f] = df[f].fillna(0.0)
+
         X = df[features].copy()
 
         # Scale data
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
 
-        # Train K-Means (Assuming 3 clusters: Champions, At Risk, Hibernating)
+        # Train K-Means (k=3)
         kmeans = KMeans(n_clusters=min(3, len(X)), random_state=42, n_init=10)
         df['cluster'] = kmeans.fit_predict(X_scaled)
 
-        # Basic persona mapping based on cluster centroids (simplified logic)
+        # Persona mapping based on cluster centroids
         centroids = kmeans.cluster_centers_
-        # Find the cluster with highest monetary value (Champions)
-        champ_cluster = np.argmax(centroids[:, 2])
-        # Find the cluster with highest recency days (Hibernating/At Risk)
-        risk_cluster = np.argmax(centroids[:, 0])
+        
+        # Centroid column indexes: 0: tenure_years, 1: avg_overtime_hours, 2: salary_growth_rate, 3: latest_performance_rating
+        high_perf_cluster = np.argmax(centroids[:, 3])  # Highest rating
+        burnout_cluster = np.argmax(centroids[:, 1])    # Highest overtime hours
+        
+        remaining = [c for c in range(min(3, len(X))) if c not in [high_perf_cluster, burnout_cluster]]
+        stagnant_cluster = remaining[0] if remaining else burnout_cluster
 
         def map_persona(cluster_id):
-            if cluster_id == champ_cluster:
-                return "Champions"
-            elif cluster_id == risk_cluster:
-                return "At Risk"
+            if cluster_id == high_perf_cluster and high_perf_cluster != burnout_cluster:
+                return "High Performers (Low Risk)"
+            elif cluster_id == burnout_cluster:
+                return "Burnout / Flight Risk"
             else:
-                return "Active"
+                return "Underutilized / Stagnant"
 
         df['predicted_segment'] = df['cluster'].apply(map_persona)
 
-        # Save models for future inference
+        # Save model and scaler
         joblib.dump(scaler, os.path.join(MODELS_DIR, "segmentation_scaler.joblib"))
         joblib.dump(kmeans, os.path.join(MODELS_DIR, "segmentation_kmeans.joblib"))
 
         # Update DB
         updated_count = 0
         for index, row in df.iterrows():
-            customer = db.query(CustomerFeature).filter(CustomerFeature.customer_id == row['customer_id']).first()
-            if customer:
-                customer.customer_segment = row['predicted_segment']
+            emp_feature = db.query(EmployeeFeature).filter(EmployeeFeature.employee_id == row['employee_id']).first()
+            if emp_feature:
+                emp_feature.employee_segment = row['predicted_segment']
                 updated_count += 1
         db.commit()
 
-        return {"status": "success", "message": f"Successfully segmented {updated_count} customers.", "clusters_found": len(np.unique(df['cluster']))}
+        return {
+            "status": "success", 
+            "message": f"Successfully segmented {updated_count} employees into risk cohorts.", 
+            "clusters_found": len(np.unique(df['cluster']))
+        }
 
     @staticmethod
-    def train_churn_model(db: Session):
+    def train_attrition_model(db: Session):
         """
-        Trains an XGBoost model to predict churn.
-        Since we don't have historical labels, we synthesize 'is_churned' 
-        as days_since_last_purchase > 15 (for demo purposes) or similar proxy.
+        Trains an XGBoost model to predict employee attrition risk.
+        Synthesizes binary target 'is_attrition_risk' and applies boundary sampling if needed.
         """
-        df = pd.read_sql("SELECT * FROM customer_features", engine)
-        if len(df) < 5:
-            # We need more data to reliably train a model, but for demo we will allow it if we synthesize
-            pass
+        df = pd.read_sql("SELECT * FROM employee_features", engine)
+        if len(df) == 0:
+            return {"status": "error", "message": "No employee features found. Compile feature store first."}
 
-        # For enterprise demo, let's define churn target dynamically:
-        # If they haven't purchased in 30 days, they are churned.
-        threshold = df['days_since_last_purchase'].median() if len(df) > 0 else 30
-        if threshold == 0: threshold = 1
+        # Define attrition risk target dynamically
+        threshold = df['attrition_risk_score'].median() if 'attrition_risk_score' in df.columns else 0.5
+        if threshold == 0 or pd.isna(threshold): 
+            threshold = 0.4
         
-        df['is_churned'] = (df['days_since_last_purchase'] > threshold).astype(int)
+        df['is_attrition_risk'] = (df['attrition_risk_score'] >= threshold).astype(int)
 
-        # If we have only 1 class (e.g., everyone is active), XGBoost will crash.
-        # Synthesize dummy data to ensure model can train.
-        if df['is_churned'].nunique() < 2:
-            dummy_churn = df.iloc[0:1].copy()
-            dummy_churn['days_since_last_purchase'] = threshold + 100
-            dummy_churn['is_churned'] = 1
+        # Handle class imbalance / single class edge cases with synthetic boundary sampling
+        if df['is_attrition_risk'].nunique() < 2:
+            dummy_high = df.iloc[0:1].copy()
+            dummy_high['avg_overtime_hours'] = 25.0
+            dummy_high['attrition_risk_score'] = 0.95
+            dummy_high['is_attrition_risk'] = 1
             
-            dummy_active = df.iloc[0:1].copy()
-            dummy_active['days_since_last_purchase'] = 0
-            dummy_active['is_churned'] = 0
+            dummy_low = df.iloc[0:1].copy()
+            dummy_low['avg_overtime_hours'] = 0.0
+            dummy_low['attrition_risk_score'] = 0.05
+            dummy_low['is_attrition_risk'] = 0
             
-            df = pd.concat([df, dummy_churn, dummy_active], ignore_index=True)
+            df = pd.concat([df, dummy_high, dummy_low], ignore_index=True)
 
         features = [
-            "tenure_days", "total_purchase_frequency", "total_monetary_value", 
-            "avg_order_value", "order_velocity_days", "refund_ratio", 
-            "unique_categories_bought", "cross_sell_ratio", "avg_quantity_per_order",
-            "total_sessions", "days_since_last_visit", "session_to_purchase_rate",
-            "total_campaigns_received", "email_ctr", "marketing_opt_out",
-            "total_support_tickets", "days_since_last_ticket", "high_severity_tickets",
-            "customer_health_score"
+            "tenure_years", "years_since_last_promotion", "promotion_velocity",
+            "manager_tenure_years", "salary_growth_rate", "total_compensation",
+            "avg_weekly_hours", "avg_overtime_hours", "workload_stress_index",
+            "sick_leave_ratio", "remote_work_ratio", "total_hr_complaints",
+            "high_severity_tickets", "days_since_last_complaint", "avg_hr_satisfaction",
+            "latest_performance_rating", "avg_performance_rating", "rating_trend",
+            "trainings_completed", "training_score_avg", "employee_satisfaction_score"
         ]
 
-        X = df[features]
-        y = df['is_churned']
+        # Ensure all columns exist
+        for col in features:
+            if col not in df.columns:
+                df[col] = 0.0
+            else:
+                df[col] = df[col].fillna(0.0)
 
-        # Train XGBoost
+        X = df[features]
+        y = df['is_attrition_risk']
+
+        # Train XGBoost Classifier
         model = xgb.XGBClassifier(
             n_estimators=100, 
             max_depth=3, 
@@ -122,84 +143,121 @@ class MLEngineService:
         )
         model.fit(X, y)
 
-        # Save model
+        # Save models
+        joblib.dump(model, os.path.join(MODELS_DIR, "attrition_model.joblib"))
+        joblib.dump(features, os.path.join(MODELS_DIR, "attrition_features.joblib"))
+
+        # For backward compatibility, also save churn_xgboost.joblib if needed
         joblib.dump(model, os.path.join(MODELS_DIR, "churn_xgboost.joblib"))
-        
-        # Save feature list for alignment during inference
         joblib.dump(features, os.path.join(MODELS_DIR, "churn_features.joblib"))
 
-        return {"status": "success", "message": "Churn prediction model trained and saved successfully."}
+        return {"status": "success", "message": "Employee Attrition Prediction XGBoost model trained and saved successfully."}
 
     @staticmethod
     def generate_predictions(db: Session):
         """
-        Loads the trained models and updates the Database with exact ML probability scores.
+        Loads trained XGBoost model and batch updates employee_features table with exact probabilities.
         """
-        model_path = os.path.join(MODELS_DIR, "churn_xgboost.joblib")
-        features_path = os.path.join(MODELS_DIR, "churn_features.joblib")
+        model_path = os.path.join(MODELS_DIR, "attrition_model.joblib")
+        features_path = os.path.join(MODELS_DIR, "attrition_features.joblib")
+
+        # Fallback to churn naming if attrition_model doesn't exist yet
+        if not os.path.exists(model_path):
+            model_path = os.path.join(MODELS_DIR, "churn_xgboost.joblib")
+            features_path = os.path.join(MODELS_DIR, "churn_features.joblib")
 
         if not os.path.exists(model_path) or not os.path.exists(features_path):
-            return {"status": "error", "message": "Models not found. Train models first."}
+            return {"status": "error", "message": "Models not found. Train attrition model first."}
 
         model = joblib.load(model_path)
         feature_cols = joblib.load(features_path)
 
-        df = pd.read_sql("SELECT * FROM customer_features", engine)
+        df = pd.read_sql("SELECT * FROM employee_features", engine)
         if len(df) == 0:
-             return {"status": "error", "message": "No customers to predict."}
+             return {"status": "error", "message": "No employees found for prediction."}
              
+        for col in feature_cols:
+            if col not in df.columns:
+                df[col] = 0.0
+            else:
+                df[col] = df[col].fillna(0.0)
+
         X = df[feature_cols]
 
-        # Predict Probabilities
-        probabilities = model.predict_proba(X)[:, 1]  # Get probability of class 1 (Churn)
+        # Predict probabilities (class 1: high attrition risk)
+        probabilities = model.predict_proba(X)[:, 1]
 
         # Update Database
         updated = 0
         for i, row in df.iterrows():
-            customer = db.query(CustomerFeature).filter(CustomerFeature.customer_id == row['customer_id']).first()
-            if customer:
-                # We override the heuristic churn_risk_score with the exact ML probability
-                customer.churn_risk_score = float(probabilities[i])
+            emp_feature = db.query(EmployeeFeature).filter(EmployeeFeature.employee_id == row['employee_id']).first()
+            if emp_feature:
+                emp_feature.attrition_risk_score = float(probabilities[i])
                 updated += 1
         
         db.commit()
-        return {"status": "success", "message": f"Generated exact ML churn predictions for {updated} customers."}
+        return {"status": "success", "message": f"Generated exact ML attrition predictions for {updated} employees."}
 
     @staticmethod
-    def get_business_recommendations(customer_id: str, db: Session):
+    def get_hr_recommendations(employee_id: str, db: Session):
         """
-        Rules-Based Business Recommendation Engine (Module 7).
-        Translates ML outputs into actionable CRM text.
+        HR Business Rules Engine.
+        Translates ML attrition probabilities and feature signals into prioritized HR retention strategies.
         """
-        feature = db.query(CustomerFeature).filter(CustomerFeature.customer_id == customer_id).first()
+        feature = db.query(EmployeeFeature).filter(EmployeeFeature.employee_id == employee_id).first()
         if not feature:
-            return {"status": "error", "message": "Customer not found."}
+            return {"status": "error", "message": "Employee not found."}
+
+        # Fetch demographic details from Employee model
+        emp = db.query(Employee).filter(Employee.employee_id == employee_id).first()
+        dept = emp.department if emp else "Unknown"
+        job_role = emp.job_role if emp else "Unknown"
 
         actions = []
         
-        # Rule 1: High Churn Risk + High CLV
-        if feature.churn_risk_score > 0.6 and feature.predicted_clv > 50:
-            actions.append({"priority": "HIGH", "action": "VIP Win-back Email + 20% Discount. Customer is highly valuable but at risk."})
+        # Rule 1 (CRITICAL): High Attrition Risk + High Performance Rating
+        if feature.attrition_risk_score > 0.6 and (feature.latest_performance_rating or 0) >= 4.0:
+            actions.append({
+                "priority": "CRITICAL", 
+                "action": "Immediate Stay Interview, Schedule Salary/Bonus Review & Retention Grant. High performer is at high flight risk!"
+            })
         
-        # Rule 2: Support Friction
-        if feature.high_severity_tickets >= 1:
-            actions.append({"priority": "CRITICAL", "action": "Customer Success Manager manual intervention required. High severity ticket detected."})
+        # Rule 2 (HIGH): High Overtime Hours + Low Satisfaction Score
+        if (feature.avg_overtime_hours or 0) > 10 or (feature.employee_satisfaction_score or 100) < 60:
+            actions.append({
+                "priority": "HIGH", 
+                "action": "Reallocate Project Workload & Mandate Manager One-on-One Check-in to alleviate burnout."
+            })
 
-        # Rule 3: Upsell Ready
-        if feature.churn_risk_score < 0.2 and feature.customer_health_score > 80:
-            actions.append({"priority": "MEDIUM", "action": "Send Upsell / Cross-sell campaign. Customer is healthy and engaged."})
+        # Rule 3 (MEDIUM): Low Performance Rating + Low Engagement
+        if (feature.latest_performance_rating or 3) <= 2.0 or (feature.trainings_completed or 0) == 0:
+            actions.append({
+                "priority": "MEDIUM", 
+                "action": "Enroll in Performance Improvement Plan (PIP) & Skills Training to boost engagement and delivery."
+            })
 
-        # Rule 4: Hibernating/Low Value
-        if feature.churn_risk_score > 0.7 and feature.predicted_clv < 50:
-            actions.append({"priority": "LOW", "action": "Automated drip campaign. Do not spend aggressive CAC on discounts."})
+        # Rule 4 (NORMAL): Low Attrition Risk + High Performance
+        if feature.attrition_risk_score < 0.3 and (feature.latest_performance_rating or 0) >= 4.0:
+            actions.append({
+                "priority": "NORMAL", 
+                "action": "Eligible for Leadership Development & Fast-Track Promotion. Maintain growth trajectory."
+            })
             
         if not actions:
-            actions.append({"priority": "NORMAL", "action": "Maintain standard lifecycle marketing."})
+            actions.append({
+                "priority": "NORMAL", 
+                "action": "Maintain standard employee engagement and regular 1-on-1 check-ins."
+            })
 
         return {
-            "customer_id": customer_id,
-            "segment": feature.customer_segment,
-            "health_score": round(feature.customer_health_score, 2),
-            "ml_churn_probability": round(feature.churn_risk_score * 100, 2),
+            "employee_id": employee_id,
+            "department": dept,
+            "job_role": job_role,
+            "tenure_years": round(feature.tenure_years or 0.0, 1),
+            "salary": round(feature.total_compensation or 0.0, 2),
+            "segment": feature.employee_segment or "Core Employee",
+            "satisfaction_score": round(feature.employee_satisfaction_score or 0.0, 1),
+            "attrition_risk_percentage": round((feature.attrition_risk_score or 0.0) * 100, 2),
+            "replacement_cost": round(feature.estimated_replacement_cost or 0.0, 2),
             "recommendations": actions
         }

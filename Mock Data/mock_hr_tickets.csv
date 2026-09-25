@@ -1,0 +1,296 @@
+ticket_id,employee_id,issue_date,resolution_date,category,severity,status,satisfaction_score
+5cc9d811-a739-49ee-b798-212cfa3cdd52,EMP002,2026-02-23,,Compensation,High,Open,1
+243ff159-5e38-457f-b438-084a34e8763a,EMP002,2026-07-31,2026-08-05,Compensation,High,Resolved,1
+462b0e29-140f-4c4b-88db-37e76b10047e,EMP002,2026-06-12,2026-06-14,Culture,High,Resolved,1
+c5f24d80-1434-4d76-94c0-098004325bbb,EMP002,2026-04-22,,Compensation,High,Open,1
+62a4e133-c6e9-4d81-a318-648636009b3e,EMP002,2026-07-10,,Compensation,High,Open,2
+,EMP003,2026-03-13,2026-03-18,Workload, high ,Resolved,2
+1fb7f81b-3857-4b74-9415-2e0af8654410,EMP003,2026-05-02,2026-05-08,Workload,High,Resolved,2
+5f143487-d036-450c-93ca-5140c60a619c,EMP003,2026-06-27,2026-06-30,Workload,High,Resolved,2
+,EMP003,2026-03-12,2026-03-17,Compensation,High,Resolved,2
+24fa9389-c80f-415c-9caf-a7e70a10ed33,EMP003,2026-04-28,2026-04-30,Compensation,High,Resolved,1
+c09cabcf-d8a3-491e-805e-022f8035c84a,EMP004,2026-05-30,2026-06-07,Workload,medium,Resolved,4
+,EMP005,2026-04-19,,Workload,Medium,Open,5
+,EMP006,2026-03-13,2026-03-14,Compensation,High,Resolved,2
+58c0bbd2-a605-432c-92ee-af7f13901001,EMP006,2026-04-04,2026-04-10,Workload,High,Resolved,1
+3814a57d-25e3-4ee4-aa79-b9dc15c5ed93,EMP006,2026-06-11,2026-06-17,Compensation,High,Resolved,2
+, EMP006 ,2026-06-14,2026-06-17,Compensation,high,Resolved,2
+1736f991-08ec-4653-bea3-641c2f60dbb9,EMP006,2026-06-01,2026-06-02,Culture,High,Resolved,2
+25c71c78-e43b-44d3-836b-8b493785a3c6,EMP006,2026-05-14,2026-05-15,Culture,High,Resolved,1
+920de2eb-57c7-46f7-918e-c8989a052777,EMP007,2026-06-17,2026-06-24,Compensation,Low,Resolved,4
+7bd4b2b6-85fc-4502-b73c-9990742e026a,EMP009,2026-07-06,2026-07-12,Compensation,High,Resolved,1
+,EMP009,2026-02-17,,Culture,High,Open,2
+f17f87ac-aa56-4930-b9aa-4468a92acc52,EMP009,2026-03-26,2026-04-01,Culture,High,Resolved,2
+117b03ea-da78-4f05-bb34-1c10b7124ed3,EMP009,2026-07-21,2026-07-27,Compensation,High,Resolved,2
+,EMP009,2026-08-01,2026-08-07,Workload,High,Resolved,1
+,EMP012,2026-07-09,2026-07-13,Workload,High,Resolved,1
+71f1d74c-8cc8-4376-ae6e-becb666422c1,EMP012,2026-07-15,2026-07-19,Culture,High,Resolved,1
+96f9ed9e-b580-472f-9fe5-7f1d81ad2b74,EMP012,2026-03-25,,Culture,High,Open,1
+,EMP012,2026-07-18,2026-07-26,Culture,High,Resolved,2
+,EMP015,2026-07-31,2026-08-10,Culture,High,Resolved,1
+,EMP015,2026-04-11,2026-04-13,Workload,High,Resolved,1
+135f1dc0-26b3-4f5f-8cce-70b481713e10,EMP015,2026-05-08,2026-05-13,Culture,High,Resolved,1
+5c40eb48-402f-4d7d-bf5f-b5bcda909e3d,EMP015,2026-03-14,2026-03-18,Culture,High,Resolved,1
+b5ef60b2-2485-445a-9a94-7a457a225707,EMP015,2026-04-29,2026-05-04,Culture,High,Resolved,2
+212c534e-de73-4e6d-8b3d-53571843586d,EMP018,2026-07-20,2026-07-22,Compensation,High,Resolved,1
+0f2c589e-6f59-41f2-9ad2-1fc916e295f6,EMP018,2026-04-14,2026-04-22,Compensation,High,Resolved,1
+4fbc4a34-23b4-43ec-9bbd-8ca40a746f8e,EMP020,2026-07-09,2026-07-14,Workload,Low,Resolved,4
+da7b59f2-cdce-45b3-8566-7981500dd6ae,EMP021,2026-02-16,2026-02-22,Culture,High,Resolved,1
+75fe7055-872c-404a-8e4c-029a909ca5a2,EMP021,2026-06-11,2026-06-19,Workload, High ,Resolved,1
+b7b0e286-d969-4aed-ae6e-ddaf5973bbe4,EMP021,2026-03-19,2026-03-24,Culture,High,Resolved,2
+e9ba86af-03d9-4143-a7af-3412051d7bb8,EMP021,2026-04-16,2026-04-21,Culture,high,Resolved,2
+f9a86df5-7034-4ab0-a866-741bccdb545c,EMP021,2026-02-26,2026-02-27,Compensation,High,Resolved,2
+cadb6458-87c8-4e67-8271-fc7f249eccc5,EMP021,2026-06-03,2026-06-04,Compensation,High,Resolved,1
+6a3c2ef0-e609-4d6a-a6e6-52d9c7a81669,EMP022,2026-03-01,2026-03-08,Workload,High,Resolved,2
+,EMP022,2026-07-20,,Workload,High,Open,2
+1b1ca87f-7b28-4ec8-b829-54c11b30811c,EMP022,2026-08-07,2026-08-12,Compensation,High,Resolved,2
+f6ee89c8-6cf6-4eb5-bb31-a60004311d03,EMP022,2026-07-22,2026-08-01,Compensation,High,Resolved,1
+21b73d7f-eebe-4722-b86e-03f379c10900,EMP022,2026-03-25,2026-04-04,Workload,High,Resolved,2
+c673f80f-00f3-4596-9693-04514a27398e,EMP022,2026-05-08,2026-05-16,Workload,High,Resolved,2
+,EMP023,2026-05-16,2026-05-20,Compensation,Medium,Resolved,4
+,EMP024,2026-07-03,,Workload,High,Open,1
+,EMP024,2026-06-21,2026-06-24,Workload,High,Resolved,2
+c51f8da5-274d-4ad8-af9d-dde18f99decd,EMP026,2026-08-02,2026-08-05,Compensation, Low ,Resolved,4
+,EMP027,2026-05-07,,Culture,High,Open,2
+96eee5ea-6382-4e58-a8a0-087365b7d825,EMP027,2026-05-18,,Workload,High,Open,1
+13b2651e-0431-42ac-8780-c25033d9524a,EMP029,2026-03-22,2026-03-26,Workload,Medium,Resolved,4
+6f942673-6b3c-484a-a328-8cf1e56f2f27,EMP030,2026-05-16,2026-05-25,Compensation,High,Resolved,1
+4b140f9e-6f2a-4824-b6ae-ca4d6daeb69e,EMP030,2026-06-26,2026-07-03,Workload,High,Resolved,1
+7bd1686e-bd3d-42b5-83e2-8956655ee90e,EMP032,2026-03-04,2026-03-10,Compensation,Medium,Resolved,5
+,EMP033,2026-02-18,,Workload,High,Open,1
+4cc851c7-ccc4-4e9f-83b5-73d369b14c50,EMP033,2026-04-19,2026-04-25,Compensation,High,Resolved,1
+70271c0e-3fc9-4b03-a172-78b3f14788b3,EMP033,2026-06-07,,Culture,High,Open,1
+7c5d2030-cae9-4d5b-a9e1-e9833332ab03,EMP033,2026-06-10,2026-06-15,Workload,High,Resolved,2
+,EMP035,2026-06-20,2026-06-26,Culture,Low,Resolved,4
+a3fb2e0f-a294-4ff8-86da-24a168dee51b,EMP036,2026-04-23,,Culture,High,Open,2
+964202cc-d997-4979-a672-23e9ee52b437,EMP036,2026-04-13,2026-04-17,Compensation,High,Resolved,1
+,EMP036,2026-03-10,2026-03-13,Culture,High,Resolved,2
+,EMP037,2026-07-23,2026-08-02,Compensation,Medium,Resolved,4
+,EMP038,2026-08-02,2026-08-07,Culture,Low,Resolved,5
+,EMP039,2026-03-10,2026-03-13,Culture, High ,Resolved,2
+79f5065e-7302-4bcd-a967-3b3a6dd68265,EMP039,2026-07-16,2026-07-20,Culture, High ,Resolved,1
+302d999f-b1ac-4473-8359-0c723bb2bee8,EMP039,2026-06-06,,Compensation,high,Open,1
+, EMP041 ,2026-07-27,2026-07-29,Compensation,Medium,Resolved,4
+68c75353-ec11-41a9-a8ff-d0a6bb131be3,EMP042,2026-08-06,2026-08-10,Compensation,High,Resolved,2
+,EMP042,2026-02-21,,Workload,High,Open,1
+,EMP042,2026-03-01,2026-03-04,Culture,High,Resolved,2
+02f4121a-4e8e-42a2-88c7-d48ff08cdbf3,EMP044,2026-05-28,2026-05-31,Culture,High,Resolved,1
+, EMP044 ,2026-06-09,,Culture,High,Open,2
+b1592533-b3e9-4fb8-8cc4-44e60d71b63b,EMP045,2026-02-28,2026-03-08,Workload,High,Resolved,1
+6aac73b3-7f42-494e-9244-475899c70d5e,EMP045,2026-07-07,2026-07-14,Culture,High,Resolved,1
+730e960b-3e1e-4e28-9f1a-c792ca9c270b,EMP045,2026-08-08,2026-08-18,Compensation, High ,Resolved,2
+, EMP046 ,2026-04-03,2026-04-04,Culture,Low,Resolved,5
+a46247eb-330b-460a-80ad-c5ce40191527,EMP047,2026-03-29,2026-03-31,Workload,High,Resolved,2
+,EMP047,2026-05-09,2026-05-19,Culture,High,Resolved,1
+,EMP047,2026-02-13,2026-02-23,Workload,High,Resolved,2
+888672eb-d1e3-40ce-be3c-2c4752f9d4fd,EMP048,2026-06-20,2026-06-23,Compensation,High,Resolved,1
+c1d959da-a0f5-481e-965e-e32daa6c9872,EMP048,2026-07-06,,Culture,High,Open,2
+dfdb4378-8bb2-43d0-8838-e09d2127978b,EMP048,2026-05-05,2026-05-15,Culture,High,Resolved,2
+,EMP048,2026-04-04,2026-04-11,Compensation,High,Resolved,2
+e39c7154-c85c-4ee8-b82d-7baddb0a19f9,EMP048,2026-04-11,2026-04-18,Compensation, High ,Resolved,1
+,EMP051,2026-07-04,2026-07-09,Culture,High,Resolved,2
+6670240b-8345-426c-957c-50ae1316e597,EMP051,2026-04-18,2026-04-23,Workload,High,Resolved,1
+a6e2ccbb-e99b-4be1-b0a3-43255e4b7679,EMP051,2026-07-06,2026-07-09,Compensation,High,Resolved,2
+,EMP051,2026-07-27,2026-08-05,Workload,High,Resolved,1
+4e8d5f3d-b774-4a3e-9321-7cc8e2cc6e8d,EMP051,2026-04-08,2026-04-15,Culture,High,Resolved,2
+,EMP052,2026-03-04,2026-03-11,Workload,Low,Resolved,5
+bc778adf-1600-4061-a3ad-8f6c3c526777,EMP053,2026-07-18,,Compensation,Low,Open,5
+,EMP054,2026-03-25,2026-03-26,Workload,High,Resolved,1
+26fd8b20-c4c4-4dad-bf9e-9d3105f8af33, EMP054 ,2026-05-30,2026-06-04,Culture,High,Resolved,2
+,EMP054,2026-07-07,2026-07-15,Compensation,High,Resolved,1
+1fd74e82-ba91-4421-87ec-ea0ec0deb4ab,EMP054,2026-04-07,2026-04-10,Workload,High,Resolved,2
+,EMP055,2026-02-20,2026-02-22,Compensation,Medium,Resolved,5
+7b77dcb5-6060-41cb-a8dd-8695a0a7d336,EMP056,2026-03-31,2026-04-03,Culture,Medium,Resolved,4
+461db6c8-d56a-430d-91fe-c8d2965a7104,EMP057,2026-07-30,2026-08-02,Compensation,High,Resolved,2
+ac693205-f3b3-4261-97d5-9f5daf76947e,EMP057,2026-05-27,,Compensation,High,Open,2
+b086b2d9-e05b-4b09-b8aa-219b8ac33fcc, EMP057 ,2026-04-07,2026-04-11,Compensation, High ,Resolved,1
+,EMP057,2026-08-04,2026-08-07,Culture,High,Resolved,2
+bf557d46-a426-42a1-be81-b719d9b485e1,EMP058,2026-05-04,2026-05-11,Culture,Medium,Resolved,5
+a1bad409-fc90-42a8-9603-6cc2c364fc22,EMP060,2026-07-23,2026-07-26,Compensation,High,Resolved,2
+,EMP060,2026-02-21,2026-03-03,Compensation,High,Resolved,2
+aac8f83f-a4b9-4259-9e8a-87a87070c559,EMP060,2026-04-22,,Compensation,High,Open,2
+,EMP060,2026-02-28,,Culture, High ,Open,2
+31611003-e049-48a8-a888-e275bdf8f305,EMP060,2026-04-28,2026-05-03,Workload,High,Resolved,1
+1411645d-6f46-4b56-9545-1fcd3c093bdf,EMP061,2026-04-19,2026-04-24,Culture,Medium,Resolved,4
+d9d18b45-0ff4-4010-b48d-8a076374ff6f,EMP062,2026-07-01,2026-07-09,Compensation,Low,Resolved,5
+,EMP063,2026-07-28,2026-08-05,Compensation,High,Resolved,1
+,EMP063,2026-07-28,2026-07-30,Compensation,High,Resolved,2
+57223ba3-34ee-48e7-ac7a-280eb54e922e,EMP065,2026-02-19,2026-02-26,Compensation,Medium,Resolved,4
+aeb0dbd1-72a2-49d5-8001-063af7d2ec14,EMP066,2026-05-20,2026-05-28,Culture,High,Resolved,1
+51a95f77-767a-4271-996b-944822ee340a,EMP066,2026-02-27,2026-03-01,Workload,high,Resolved,1
+,EMP066,2026-06-22,2026-06-28,Workload, High ,Resolved,1
+e35e2899-9cf0-4756-bd42-0f4aa5a69290,EMP067,2026-08-09,,Compensation,Low,Open,4
+9218ebb9-e972-464f-ab3f-6e681aca2802,EMP068,2026-04-10,,Workload,Medium,Open,4
+f8603977-c003-45e3-b49d-bae7e87e6cbb,EMP069,2026-08-08,2026-08-17,Culture,High,Resolved,1
+f9a311cd-303f-42d1-a66c-cfe4977a1f6f,EMP069,2026-05-27,,Workload,High,Open,2
+05c6e0bb-433d-4089-b5f6-cd29196ae205,EMP069,2026-07-06,2026-07-12,Compensation,High,Resolved,1
+,EMP069,2026-03-29,2026-04-02,Workload, High ,Resolved,1
+18e7e91b-1306-4efa-bb34-9de9d5051fcb, EMP069 ,2026-05-02,,Culture,High,Open,2
+,EMP069,2026-07-05,,Culture,High,Open,1
+,EMP071,2026-06-04,2026-06-12,Culture,Medium,Resolved,5
+24354d7b-e118-423b-bb05-509863b2d2c4,EMP072,2026-05-29,2026-06-04,Compensation,High,Resolved,1
+de8eb354-2852-4ddb-89ae-5dd38cffd63c,EMP072,2026-06-06,2026-06-13,Compensation,High,Resolved,2
+35ea1658-a661-4985-96a0-5f2756a7b951,EMP072,2026-06-14,2026-06-20,Workload,High,Resolved,1
+2034a634-7a0c-47fc-9ddc-68b32c22fde9,EMP072,2026-08-06,2026-08-11,Workload,High,Resolved,2
+f35a290e-21e1-4ae4-93c9-36ecd114b948,EMP075,2026-03-24,,Workload,High,Open,1
+b0bd6d77-fd7a-4363-b340-45115c6112e8,EMP075,2026-04-22,,Workload,High,Open,2
+1a7334c2-047d-4d2a-9b7d-06b114f30663,EMP075,2026-05-18,2026-05-21,Culture,High,Resolved,2
+e3ed0375-0c5d-40c6-a798-d5e23ca75685, EMP075 ,2026-06-14,2026-06-21,Compensation,High,Resolved,2
+46c640e5-f5b6-4374-ba12-edf9d73154a1,EMP076,2026-02-23,2026-02-28,Culture,Low,Resolved,4
+aea8988a-3c0d-4fe5-a6f4-c15daf1a6b0f,EMP078,2026-06-28,2026-06-29,Compensation,High,Resolved,2
+f93a2733-ef20-49b0-b885-819ca677fe7b,EMP078,2026-06-18,2026-06-24,Workload,High,Resolved,1
+ca384b43-4b9e-491c-aa5c-badd61ce1dba,EMP078,2026-08-06,,Workload,High,Open,2
+a5ff969c-5851-46ea-bc13-2c032f65e5db, EMP078 ,2026-04-27,2026-05-01,Culture,High,Resolved,2
+ffc213e7-48c7-453d-852a-59a27b3c7b36,EMP081,2026-03-30,2026-04-05,Workload,High,Resolved,2
+,EMP081,2026-07-22,2026-07-23,Culture,High,Resolved,2
+1c7ee283-f923-4a3e-b10f-adf4538ca391,EMP081,2026-03-09,2026-03-14,Workload,High,Resolved,1
+1941ee35-dfbe-42b8-8093-65e83ad07dcd,EMP082,2026-04-18,2026-04-25,Workload,High,Resolved,1
+,EMP082,2026-03-30,2026-04-03,Workload,High,Resolved,2
+,EMP083,2026-04-09,2026-04-12,Culture,High,Resolved,1
+f489e46d-6696-4b54-9500-2c65a709660e,EMP083,2026-06-09,,Compensation,High,Open,2
+541a3b32-663c-45cc-b14f-ba36c9d1b647,EMP083,2026-05-27,2026-05-28,Workload,High,Resolved,1
+fa9f2896-55a5-4f9d-a450-2d812bccbe72,EMP083,2026-06-17,2026-06-22,Compensation,High,Resolved,1
+953477bf-9abe-4c2d-8a5c-3d18d3a3377d,EMP084,2026-04-13,2026-04-18,Culture,High,Resolved,1
+111ee320-4e09-4b1c-9acb-2f66e30ff0e8,EMP084,2026-03-22,2026-03-27,Culture,High,Resolved,2
+678a26bb-ff12-46ce-b095-7dad55410699, EMP084 ,2026-02-28,2026-03-09,Culture,High,Resolved,1
+7eaa7653-e89e-43bc-894f-e5a0f9e5830b,EMP084,2026-02-21,2026-02-28,Compensation,High,Resolved,2
+7af0553b-28e8-4730-a0c4-4316b4fc6e17,EMP084,2026-03-29,2026-04-04,Compensation,High,Resolved,1
+,EMP085,2026-04-07,2026-04-09,Culture,Low,Resolved,4
+,EMP086,2026-07-13,2026-07-22,Compensation, Low ,Resolved,5
+c377f293-107e-40d1-b85b-dfea5c6e7d65,EMP087,2026-06-03,2026-06-10,Culture,High,Resolved,2
+705c59d8-6997-4ae9-b476-e51ec5f7d2d9,EMP087,2026-04-10,,Workload,High,Open,1
+,EMP087,2026-04-15,2026-04-20,Compensation,High,Resolved,1
+36c7c265-155d-4d3b-8be8-055143dcf2ac,EMP087,2026-07-21,2026-07-29,Culture,High,Resolved,1
+46379440-a259-4bba-9667-66204a871aec,EMP087,2026-04-22,2026-05-02,Culture,high,Resolved,2
+0586b919-cbe7-4ce1-917e-cd981145537e,EMP087,2026-07-21,2026-07-26,Compensation,High,Resolved,1
+88ff751b-54d8-4bdf-9bea-98681291506c,EMP088,2026-07-28,2026-08-06,Workload,Low,Resolved,4
+,EMP089,2026-07-25,2026-07-30,Compensation,Low,Resolved,4
+c9527350-5d93-426f-bd03-08f47e73fa0d,EMP090,2026-06-15,2026-06-24,Workload,High,Resolved,2
+,EMP090,2026-03-24,,Workload, High ,Open,2
+,EMP090,2026-03-10,2026-03-13,Compensation,High,Resolved,1
+900d2d1f-7ed7-4471-8204-4f4158ade0ed,EMP090,2026-07-08,2026-07-11,Workload,high,Resolved,1
+e3e486a3-7fed-4941-acc7-fb4b1896ab5a,EMP090,2026-06-08,2026-06-09,Workload,high,Resolved,1
+1b176790-b8ce-4a80-828e-8300b2f7048f,EMP092,2026-06-30,,Compensation,High,Open,2
+61c991a6-0e9d-4fe6-9eed-7766cc28ef56,EMP092,2026-05-02,2026-05-10,Workload,High,Resolved,2
+,EMP092,2026-04-22,2026-04-27,Compensation,High,Resolved,2
+1dcc8d68-b59a-4c03-9ff4-dab4f40f142b,EMP092,2026-03-14,2026-03-18,Compensation,High,Resolved,1
+,EMP093,2026-03-25,2026-03-31,Culture, High ,Resolved,2
+b7759d96-f75f-4da4-af39-3b78c3cfc1f7,EMP093,2026-08-01,2026-08-09,Workload,High,Resolved,2
+4ea0578b-396e-4055-a479-badf0f9b8f50,EMP093,2026-08-07,,Compensation,High,Open,2
+09642b71-99b4-4a8d-8f2f-246d63f23642,EMP093,2026-06-15,,Compensation,High,Open,1
+670632bc-924e-4540-9afd-f3160375ccf1,EMP094,2026-02-19,2026-02-22,Compensation,Medium,Resolved,4
+4a763272-69b9-4fa9-8b51-97f6dcab6917,EMP096,2026-02-20,2026-03-01,Workload,High,Resolved,2
+60f6f474-3714-4fe4-acde-be0e58551dbc,EMP096,2026-06-10,2026-06-19,Culture,High,Resolved,2
+30f85c35-4c76-4fb1-9122-e7a7a4227da5,EMP096,2026-03-28,2026-04-03,Culture,High,Resolved,1
+6f1207b0-c72a-4076-9709-b0148165b3b2,EMP096,2026-02-14,2026-02-19,Compensation,High,Resolved,1
+04de7af8-639c-4979-94b5-a4a74a7e897d,EMP098,2026-04-13,2026-04-19,Workload,Low,Resolved,5
+fe0a8aca-3e9b-43af-b82c-dd33f0e1cd03, EMP099 ,2026-02-15,2026-02-16,Culture,High,Resolved,1
+7e6ab55b-de89-4b8d-92fd-db53a0e591ee,EMP099,2026-06-09,2026-06-18,Culture,high,Resolved,2
+7e7dcb37-cabf-4edb-a25f-6205f9dd9c94, EMP101 ,2026-04-17,,Compensation,Low,Open,5
+f7bceec3-a132-4337-a633-8c68366b7bfb,EMP102,2026-05-09,,Compensation,High,Open,1
+84e21384-c280-4daf-a034-592ce80be6f1,EMP102,2026-06-27,2026-06-30,Workload,High,Resolved,2
+bd5b05ec-05a6-429a-b94a-715891078685,EMP102,2026-04-10,2026-04-12,Compensation,High,Resolved,2
+3123de9d-9282-4e0e-a13e-da5508b6c4c2,EMP103,2026-03-04,2026-03-12,Workload,Medium,Resolved,4
+acc40e85-0f69-47bb-aa0d-f50a60df0f5f,EMP104,2026-03-21,2026-03-27,Workload,Medium,Resolved,5
+185f48f7-99b8-4b99-952c-8c8bbb6ee013,EMP105,2026-06-21,2026-06-24,Culture,High,Resolved,1
+9c6ae52f-fc54-4d73-a83d-041df086dd2c,EMP105,2026-08-11,,Compensation,High,Open,2
+,EMP105,2026-04-14,2026-04-22,Workload,High,Resolved,2
+,EMP105,2026-08-02,2026-08-07,Culture,High,Resolved,1
+7d6fd84a-0670-4230-a032-dd39a8d1729c,EMP106,2026-06-22,2026-06-30,Culture,Low,Resolved,4
+9be32061-35ac-410b-afd0-08f9fb4680b8,EMP107,2026-04-22,,Compensation,Medium,Open,5
+,EMP108,2026-06-22,2026-06-24,Compensation,High,Resolved,2
+21e70877-7658-4891-815a-70d95f016c41,EMP108,2026-05-03,,Workload,High,Open,2
+4e6d6825-c393-4df2-a14a-6f156904416d,EMP110,2026-03-29,2026-04-03,Compensation,High,Resolved,2
+528f7c9c-8e43-4711-bfcf-f958b6188097,EMP110,2026-04-07,2026-04-16,Workload,High,Resolved,1
+958f51ca-410b-4519-bc22-d6097aa80466,EMP110,2026-03-16,2026-03-26,Compensation,High,Resolved,1
+8db76347-4b3a-4a58-b28a-2609a644369d,EMP110,2026-03-24,,Culture,High,Open,2
+,EMP110,2026-08-03,,Workload,High,Open,1
+fc1e8d79-cae6-408f-97af-dd1af898115b,EMP111,2026-04-06,2026-04-12,Culture,High,Resolved,2
+178f2c2d-84a8-46bb-a436-4b99e9ce8b35,EMP111,2026-05-11,2026-05-19,Culture,High,Resolved,1
+2349a232-9802-4f29-be7a-e405f715dc91,EMP113,2026-06-07,2026-06-17,Culture,Low,Resolved,4
+1ba3f3b5-ed57-47b8-b86f-d5c6c41ea1af,EMP114,2026-02-14,2026-02-21,Culture,High,Resolved,1
+,EMP114,2026-06-09,,Culture,High,Open,1
+ad9b3d65-7658-430f-8d33-8108bc97cb1d,EMP114,2026-04-24,2026-05-04,Culture,High,Resolved,2
+06718138-6a9d-4ee3-b388-d884ef0cbc3f,EMP114,2026-06-30,,Culture,High,Open,2
+d20c759e-6a68-4709-b1a2-c0a4a54044da,EMP114,2026-03-02,2026-03-09,Culture,high,Resolved,1
+009b6c29-2084-49e1-9e51-8b10faa88a02,EMP114,2026-03-30,,Workload,High,Open,1
+3ee2ad80-21cb-420e-a372-b71dea8d962c,EMP115,2026-04-09,2026-04-17,Compensation,low,Resolved,5
+0b50b720-3f25-4e1a-a6d0-8c86e142aadf,EMP116,2026-03-21,,Culture,Medium,Open,4
+,EMP117,2026-06-15,2026-06-19,Workload,High,Resolved,1
+5c7fd8f1-f3a9-481d-b2f8-0a47b78c6842,EMP117,2026-08-02,2026-08-10,Workload,High,Resolved,2
+,EMP117,2026-05-16,,Compensation,High,Open,1
+f30e916e-7240-48cb-b31c-e6144083e3f3,EMP118,2026-06-09,2026-06-17,Culture,High,Resolved,1
+9c6a4658-02ad-4405-8ccb-854d456fa137,EMP118,2026-05-04,2026-05-06,Compensation,High,Resolved,1
+1ebabf6c-ee62-43d0-bdf3-796e8e0b3412,EMP118,2026-06-30,,Workload,High,Open,2
+2428995a-6e79-4396-8ace-c75f7e94b149,EMP120,2026-08-07,2026-08-17,Compensation,High,Resolved,1
+58a5a3f7-287b-447d-a6d1-5157c2757775,EMP120,2026-05-12,2026-05-18,Compensation,High,Resolved,2
+a3219699-d32c-432f-9cad-6dc57d94788d,EMP121,2026-02-23,,Workload,Medium,Open,5
+,EMP123,2026-02-27,2026-02-28,Culture,High,Resolved,2
+,EMP123,2026-03-14,2026-03-20,Culture, High ,Resolved,1
+,EMP123,2026-04-23,2026-04-28,Culture,High,Resolved,1
+,EMP124,2026-07-13,2026-07-18,Workload,Low,Resolved,5
+78e3902c-b4eb-4a59-bd2e-1cb500b62d2f,EMP125,2026-05-31,2026-06-10,Culture,Low,Resolved,5
+eb98fe57-d568-4da9-87e0-36ab51e86a8c,EMP126,2026-07-20,2026-07-25,Workload,High,Resolved,1
+,EMP126,2026-08-04,2026-08-09,Culture,High,Resolved,1
+386b676d-8f1f-4aa3-95e5-5c68c8e2e509,EMP126,2026-07-09,,Culture,high,Open,2
+36a179f0-3e98-45ca-8bfb-6433a0d7fc3a,EMP127,2026-02-22,2026-03-02,Compensation,Medium,Resolved,4
+,EMP128,2026-06-27,2026-06-30,Workload,Medium,Resolved,5
+082af59f-ecc5-44dd-a2be-a13e6e025fcd,EMP129,2026-07-04,2026-07-11,Compensation,High,Resolved,2
+93057615-24a8-488e-b620-1fd64d54e53a,EMP129,2026-03-20,,Workload,High,Open,2
+e7971325-09bb-4618-80cc-7fb1fa1c95bb,EMP130,2026-05-14,2026-05-17,Culture,High,Resolved,1
+a9adff43-78e5-4fb6-91c6-78829f209bbd,EMP130,2026-04-29,2026-05-09,Workload,High,Resolved,2
+,EMP130,2026-07-04,,Culture,High,Open,1
+73573f60-1673-4da1-be89-1359af82a75c,EMP130,2026-05-07,2026-05-10,Workload,high,Resolved,2
+67636743-8635-49ae-8fcb-80c651e3f16c,EMP132,2026-06-30,2026-07-05,Workload,High,Resolved,2
+87c83124-491a-4374-8cc0-b6e2b959c6c0,EMP132,2026-02-15,,Compensation, High ,Open,1
+0f3e1a46-d699-4109-b82b-dbbbedd15b37,EMP132,2026-04-16,2026-04-19,Compensation,High,Resolved,2
+d038f279-8908-4df1-b9fe-a640be9d408f,EMP132,2026-06-10,2026-06-20,Workload,High,Resolved,2
+3e0df1e7-7813-4ef8-b2ba-9a8d52ebdb76,EMP134,2026-07-05,,Workload,high,Open,2
+25f36c33-aa4c-45c0-9fa1-e5c84d4a18af,EMP134,2026-07-12,2026-07-20,Workload,High,Resolved,2
+c630d47c-fbe6-4b36-bbca-d407640b7043,EMP134,2026-04-14,2026-04-15,Workload,High,Resolved,2
+e0164e12-c4f3-4128-8fa5-0ab92ec72e4e,EMP134,2026-06-19,,Compensation,High,Open,1
+19a51509-8ac8-4f6e-8715-44cc96f29778,EMP135,2026-05-26,,Compensation,high,Open,2
+e61c4c69-daaa-46d1-9d17-09a420fa6725,EMP135,2026-08-10,2026-08-20,Workload,High,Resolved,2
+b0a314ef-7cd5-4254-ac4c-362e77de2068,EMP135,2026-06-09,2026-06-11,Culture,High,Resolved,2
+,EMP135,2026-06-21,2026-06-25,Culture,High,Resolved,2
+,EMP136,2026-02-17,2026-02-25,Workload,High,Resolved,2
+,EMP136,2026-03-13,2026-03-15,Compensation,High,Resolved,1
+f5962763-21f8-4c1f-a765-ba8c4c24ee32,EMP136,2026-05-13,2026-05-21,Culture,High,Resolved,1
+a63193b7-f9b7-4e39-a799-9965d3c1a916,EMP136,2026-07-13,2026-07-14,Workload,High,Resolved,2
+,EMP136,2026-04-12,2026-04-13,Compensation,high,Resolved,1
+,EMP137,2026-02-13,2026-02-17,Workload,Medium,Resolved,5
+,EMP138,2026-03-06,2026-03-09,Compensation,High,Resolved,1
+b59f74d9-0604-4dbc-84ba-372ab471045f,EMP138,2026-02-14,2026-02-22,Culture,High,Resolved,2
+eb867f54-9e3c-4bac-ad66-f1aff1f1a2f6,EMP138,2026-08-02,2026-08-08,Culture,High,Resolved,1
+,EMP138,2026-02-28,2026-03-01,Culture,High,Resolved,1
+b42ad854-f474-42ed-beb7-8578a380031b,EMP138,2026-05-11,2026-05-13,Compensation,High,Resolved,2
+8893405c-eef3-44ac-bc77-f8cd7176463a,EMP140,2026-02-20,2026-03-01,Culture,Medium,Resolved,4
+,EMP141,2026-04-21,2026-04-24,Culture,High,Resolved,2
+8e71ffaa-447d-43a1-8905-68ffce05ffcb,EMP141,2026-03-21,2026-03-30,Culture,High,Resolved,1
+,EMP141,2026-05-09,2026-05-11,Compensation,High,Resolved,1
+,EMP141,2026-03-20,2026-03-24,Culture,High,Resolved,1
+6895596a-3acd-40b5-82e0-97ac4327a4ad,EMP141,2026-08-01,2026-08-10,Compensation,High,Resolved,1
+d25b3112-50cf-417f-82a8-32ec0859193e,EMP142,2026-07-01,,Compensation,High,Open,1
+763b9121-4e37-474c-abc8-f81db3c83c02,EMP142,2026-04-10,2026-04-17,Workload,High,Resolved,1
+,EMP142,2026-07-07,,Compensation,High,Open,2
+,EMP143,2026-05-27,2026-06-01,Compensation,Low,Resolved,4
+fea1ab7b-1c43-4ce6-b573-5e2d01275b80,EMP144,2026-08-09,2026-08-19,Workload,High,Resolved,1
+55bc3b52-360e-4381-b0b4-b074009e22a5,EMP144,2026-03-01,,Compensation,High,Open,2
+9d4a291d-5439-4339-ac5d-78bf3eddca0f,EMP146,2026-04-03,2026-04-11,Culture,Low,Resolved,5
+627c87ef-88cb-4605-a4db-eb05eacf2a7e,EMP147,2026-05-13,2026-05-21,Workload,High,Resolved,2
+,EMP147,2026-06-13,,Compensation,High,Open,2
+5d365109-4de1-46bd-8ea0-c3252d5af235,EMP147,2026-06-10,,Workload,High,Open,1
+,EMP147,2026-03-19,,Compensation,High,Open,2
+,EMP147,2026-07-14,2026-07-18,Compensation,High,Resolved,2
+ede768e2-840b-4a60-a602-edbba9a2ec86,EMP147,2026-08-05,2026-08-09,Workload,High,Resolved,1
+00d90e6c-6c94-4bfc-a961-bc951a8ac5a3,EMP148,2026-04-18,2026-04-27,Culture, High ,Resolved,1
+b7f6aee1-1450-45fc-b023-38a5d03ca0c1,EMP148,2026-03-26,2026-04-02,Workload,High,Resolved,1
+,EMP148,2026-05-14,2026-05-24,Workload,High,Resolved,1
+154d1386-ea64-4117-9144-c5e6de3f4acb,EMP148,2026-03-24,,Workload,High,Open,1
+7441b0d2-c392-44fb-bff1-126e18a55cbd,EMP148,2026-05-04,2026-05-06,Culture,High,Resolved,2
+fb76d6f6-a18f-49c2-8b5b-48479125d241,EMP149,2026-07-26,2026-08-03,Culture,High,Resolved,1
+84c55022-24dd-440d-a9d7-80602708c586,EMP149,2026-08-02,2026-08-11,Culture,High,Resolved,2
+ae66f537-f31c-45e4-bfc6-0a8ad8d5ef54,EMP150,2026-03-08,2026-03-10,Compensation,High,Resolved,1
+e2e1f68d-6497-4fe7-9e54-d14ae0198eaa,EMP150,2026-03-16,2026-03-23,Culture,High,Resolved,2
+8d0dc329-371b-419d-9282-2ba81e3a89dd,EMP150,2026-04-04,2026-04-08,Culture,High,Resolved,2
+7a8c67cd-246f-4213-93ce-d3db31f038ad,EMP150,2026-06-17,2026-06-25,Workload,High,Resolved,1

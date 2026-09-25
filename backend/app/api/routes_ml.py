@@ -8,9 +8,9 @@ router = APIRouter(tags=["Machine Learning Pipeline"])
 @router.post("/ml/calculate-features")
 def trigger_feature_engineering(db: Session = Depends(get_db)):
     """
-    Triggers the Pandas-based Feature Engineering pipeline.
-    Calculates the 24 key ML features from raw database tables
-    and bulk upserts them into the customer_features table.
+    Triggers the Pandas-based HR Feature Engineering pipeline.
+    Calculates the 24 key HR metrics from raw database tables
+    and bulk upserts them into the employee_features table.
     """
     service = FeatureEngineeringService(db)
     

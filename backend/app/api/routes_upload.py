@@ -21,33 +21,32 @@ async def upload_dataset(
     db: Session = Depends(get_db)
 ):
     """
-    Upload a CSV dataset. 
-    Supported types: customers, transactions, products, customer_behavior, support, marketing
+    Upload an HR CSV dataset. 
+    Supported types: employees, compensation, performance, workload, hr_tickets, training
     """
-    valid_types = ["customers", "transactions", "products", "customer_behavior", "support", "marketing"]
+    valid_types = ["employees", "compensation", "performance", "workload", "hr_tickets", "training"]
     
     if dataset_type not in valid_types:
         raise HTTPException(status_code=400, detail=f"Invalid dataset_type. Must be one of {valid_types}")
 
-    # MIME Type and File Size Security Scan
+    # MIME Type and File Extension Security Check
     if file.content_type not in ["text/csv", "application/vnd.ms-excel"] and not file.filename.endswith('.csv'):
         raise HTTPException(status_code=400, detail="Only CSV files are supported currently.")
 
-    # Note: FastAPI/Starlette doesn't provide a direct way to get file size before reading, 
-    # but we can check it using seek
+    # Check file size
     file.file.seek(0, 2)
     file_size = file.file.tell()
     file.file.seek(0)
     
-    if file_size > 500 * 1024 * 1024: # 500 MB
+    if file_size > 500 * 1024 * 1024: # 500 MB limit
         raise HTTPException(status_code=413, detail="File too large. Maximum size is 500MB.")
 
-    # Save the file temporarily
+    # Save temporary file
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Parse the optional column mapping JSON
+    # Parse column mapping JSON
     mapping_dict = None
     if column_mapping:
         try:
@@ -56,23 +55,16 @@ async def upload_dataset(
             raise HTTPException(status_code=400, detail="Invalid JSON provided in column_mapping.")
 
     try:
-        # Initialize the cleaner service
         cleaner = DataCleanerService(db)
-        
-        # Run the processing pipeline with the dynamic mapper
         result = cleaner.process_file_in_chunks(file_path, dataset_type, column_mapping=mapping_dict)
-        
-        # Add the filename to the response
         result['filename'] = file.filename
-        
         return result
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Data processing failed: {str(e)}")
     finally:
-        # Clean up the raw file after processing to save space
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
         except Exception:
-            pass # Ignore Windows file locking errors so the real error isn't masked
+            pass

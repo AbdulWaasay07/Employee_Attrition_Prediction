@@ -1,0 +1,176 @@
+================================================================================
+EMPLOYEE INTELLIGENCE & ATTRITION PREDICTION PLATFORM
+COMPLETE LIST OF MACHINE LEARNING ALGORITHMS, STATISTICAL TECHNIQUES, 
+MATHEMATICAL FORMULATIONS, DATA ENGINEERING METHODS & DECISION LOGIC
+================================================================================
+
+--------------------------------------------------------------------------------
+1. MACHINE LEARNING ALGORITHMS (CORE PREDICTIVE LAYER)
+--------------------------------------------------------------------------------
+
+1.1. XGBoost Classifier (xgboost.XGBClassifier)
+* Type: Supervised Machine Learning (Gradient Boosted Decision Trees / Ensemble Learning).
+* Objective / Task: Binary Classification & Continuous Probability Scoring (0.0 to 1.0 / 0% to 100%).
+* Business Purpose: Predicts the precise probability that an employee will leave the organization within the next 6 to 12 months.
+* Hyperparameters & Configuration:
+  - n_estimators = 100 (Builds 100 sequential boosting trees)
+  - max_depth = 3 (Controls tree depth to prevent overfitting on tabular HR data)
+  - learning_rate = 0.1 (Shrinkage factor for robust convergence)
+  - eval_metric = 'logloss' (Binary logistic loss function)
+  - random_state = 42 (Ensures deterministic, reproducible training runs)
+* Input Features (21 Dimensions):
+  tenure_years, years_since_last_promotion, promotion_velocity, manager_tenure_years, 
+  salary_growth_rate, total_compensation, avg_weekly_hours, avg_overtime_hours, 
+  workload_stress_index, sick_leave_ratio, remote_work_ratio, total_hr_complaints, 
+  high_severity_tickets, days_since_last_complaint, avg_hr_satisfaction, 
+  latest_performance_rating, avg_performance_rating, rating_trend, 
+  trainings_completed, training_score_avg, employee_satisfaction_score.
+* Output: Continuous probability scores stored in employee_features.attrition_risk_score.
+
+1.2. K-Means Clustering (sklearn.cluster.KMeans)
+* Type: Unsupervised Machine Learning (Centroid-Based Distance Partitioning).
+* Objective / Task: Workforce Persona Segmentation (k = 3 cohorts).
+* Business Purpose: Automatically groups employees into intuitive behavioral personas for HR managers.
+* Hyperparameters & Configuration:
+  - n_clusters = 3 (3 distinct workforce risk personas)
+  - n_init = 10 (10 centroid initialization runs selecting the best inertia)
+  - random_state = 42 (Reproducible clustering)
+* Input Dimensions (4 Core Signals):
+  tenure_years, avg_overtime_hours, salary_growth_rate, latest_performance_rating.
+* Centroid Profiling & Persona Mapping:
+  - "High Performers (Low Risk)": Cluster centroid with highest performance rating and normal working hours.
+  - "Burnout / Flight Risk": Cluster centroid with highest overtime hours and elevated workload stress.
+  - "Underutilized / Stagnant": Cluster centroid with lowest salary growth rate and stagnant tenure without advancement.
+* Output: Categorical persona stored in employee_features.employee_segment.
+
+--------------------------------------------------------------------------------
+2. FEATURE ENGINEERING & MATHEMATICAL FORMULATIONS (THE 24 FEATURES)
+--------------------------------------------------------------------------------
+
+2.1. Z-Score Feature Standardization (sklearn.preprocessing.StandardScaler)
+* Formula: z = (x - mu) / sigma
+* Purpose: Standardizes multi-dimensional metrics to zero mean (mu = 0) and unit variance (sigma = 1) before K-Means distance calculations.
+
+2.2. Workload Stress Index
+* Formula: Workload Stress Index = avg_weekly_hours + (avg_overtime_hours * 1.5)
+* Purpose: Amplifies overtime hours to capture non-linear burnout risks.
+
+2.3. Salary Growth Rate (Compensation Velocity)
+* Formula: Salary Growth Rate = (salary_latest - salary_first) / salary_first
+* Purpose: Measures career compensation progression against tenure.
+
+2.4. Promotion Velocity
+* Formula: Promotion Velocity = Total Promotions / tenure_years
+* Purpose: Quantifies advancement speed per year of service.
+
+2.5. Rating Trend (Performance Trajectory)
+* Formula: Rating Trend = latest_performance_rating - avg_performance_rating
+* Purpose: Detects sudden performance declines or upward career momentum.
+
+2.6. Derived Employee Satisfaction Score (0 to 100 Scale)
+* Formula: 
+  Satisfaction = clip(50 + (10 * Rating) + (20 * TrainingRatio) - (8 * Complaints) - (15 * HighSevTickets) - (0.5 * OvertimeHours), 0, 100)
+* Purpose: Synthesizes multi-domain sentiment into an aggregate workforce morale indicator.
+
+2.7. Estimated Replacement Cost
+* Formula: Replacement Cost = Annual Base Salary * 0.50
+* Purpose: Industry benchmark quantifying the financial loss of employee turnover.
+
+2.8. Complete 24-Feature Vector Roster:
+  1. tenure_years: (Current Date - hire_date) / 365.25
+  2. years_since_last_promotion: Years elapsed since latest promotion
+  3. salary_growth_rate: Compound wage growth percentage
+  4. total_compensation: salary + bonus + stock_options
+  5. avg_weekly_hours: Mean weekly hours worked
+  6. avg_overtime_hours: Mean weekly overtime hours logged
+  7. workload_stress_index: Combined workload strain metric
+  8. sick_leave_ratio: Total sick leaves / tenure months
+  9. remote_work_ratio: Remote working days / total working days
+  10. total_hr_complaints: Total HR grievances submitted
+  11. high_severity_tickets: Count of high-severity friction tickets
+  12. days_since_last_complaint: Recency of workplace friction
+  13. avg_hr_satisfaction: Average CSAT rating on resolved tickets
+  14. latest_performance_rating: Most recent review rating (1 to 5)
+  15. avg_performance_rating: Historic mean appraisal rating
+  16. rating_trend: Trajectory delta between latest and historic rating
+  17. trainings_completed: Count of completed upskilling programs
+  18. training_score_avg: Mean assessment score across courses
+  19. manager_tenure_years: Duration under current reporting manager
+  20. promotion_velocity: Promotions per year of tenure
+  21. employee_satisfaction_score: Composite sentiment index (0-100)
+  22. attrition_risk_score: Continuous ML flight risk probability (0.0-1.0)
+  23. estimated_replacement_cost: Financial turnover replacement impact ($)
+  24. employee_segment: Qualitative persona cohort string
+
+--------------------------------------------------------------------------------
+3. STATISTICAL & DATA CLEANING TECHNIQUES
+--------------------------------------------------------------------------------
+
+3.1. Statistical Winsorization (99th Percentile Quantile Capping)
+* Technique: pandas.Series.quantile(0.99) combined with .clip(upper=limit)
+* Purpose: Caps extreme compensation and workload outliers ($999,999 typos) to protect statistical integrity without deleting rows.
+
+3.2. Central Tendency Median Imputation
+* Technique: .fillna(df[col].median())
+* Purpose: Imputes missing numerical cells using median values to resist outlier skew.
+
+3.3. Categorical Imputation & String Standardization
+* Technique: Whitespace stripping, title-casing (.str.title()), and missing value substitution with "Unknown".
+
+3.4. Regular Expression Currency Parsing
+* Technique: Regex pattern r'[^\d\.-]' stripping '$', commas, and text from financial inputs.
+
+3.5. Fuzzy Boolean Coercion
+* Technique: Parses mixed truth representations ('true', '1', 'yes', 'completed') into strict boolean primitives (True / False).
+
+3.6. Safe Datetime Parsing & Conversion
+* Technique: pd.to_datetime(errors='coerce') and conversion to native Python datetime objects for database compatibility.
+
+3.7. Cryptographic UUID Primary Key Generation
+* Technique: uuid.uuid4() generation for missing primary identifiers.
+
+3.8. Synthetic Boundary Sampling
+* Technique: Injects synthetic positive/negative boundary samples during edge-case training to guarantee stable binary target calibration.
+
+--------------------------------------------------------------------------------
+4. DATA ENGINEERING & RELATIONAL DATABASE TECHNIQUES
+--------------------------------------------------------------------------------
+
+4.1. Chunked Stream Ingestion (chunksize = 10,000)
+* Purpose: Streams large CSV files in 10,000-row chunks to ensure constant low memory (RAM) usage during file processing.
+
+4.2. Smart Upserting & Primary Key Deduplication
+* Technique: Bulk pre-check and delete on incoming primary keys combined with row-by-row session.merge() fallback.
+* Purpose: Enables safe re-uploading of datasets without MySQL 1062 duplicate key crashes.
+
+4.3. Relational Foreign Key Integrity Enforcement
+* Architecture: Central primary hub (employees) linked to 5 transactional satellite tables (compensation, performance_reviews, workload_attendance, hr_tickets, training_engagement).
+
+4.4. Binary Model Serialization (Joblib)
+* Artifacts: Serializes trained weights to .joblib files (attrition_model.joblib, segmentation_kmeans.joblib, segmentation_scaler.joblib, attrition_features.joblib) for sub-millisecond API inference.
+
+--------------------------------------------------------------------------------
+5. DECISION SUPPORT & BUSINESS RULES ENGINE
+--------------------------------------------------------------------------------
+
+Deterministic Rule-Based Decision Matrix:
+Maps probabilistic ML flight risk scores and friction thresholds into prioritized retention action plans.
+
++-------------+---------------------+-------------------------------+----------+-------------------------------------------------------------------------+
+| Risk Score  | Performance Rating  | Overtime / Friction Metrics   | Priority | Recommended HR Action Plan                                              |
++-------------+---------------------+-------------------------------+----------+-------------------------------------------------------------------------+
+| High (>0.6) | High (>= 4.0)       | Any                           | CRITICAL | Immediate Stay Interview, Schedule Salary/Bonus Review & Retention Grant|
+| High (>0.6) | Any                 | High (>10 hrs OT) / Low Sat   | HIGH     | Reallocate Project Workload & Mandate Manager One-on-One Check-in       |
+| Low (<0.3)  | Low (<= 2.0)        | Low                           | MEDIUM   | Enroll in Performance Improvement Plan (PIP) & Skills Training          |
+| Low (<0.3)  | High (>= 4.0)       | Low                           | NORMAL   | Eligible for Leadership Development & Fast-Track Promotion              |
+| Default     | Any                 | Normal                        | NORMAL   | Maintain standard employee engagement and regular 1-on-1 check-ins      |
++-------------+---------------------+-------------------------------+----------+-------------------------------------------------------------------------+
+
+--------------------------------------------------------------------------------
+6. ARCHITECTURAL & WEB FRAMEWORK TECHNOLOGIES
+--------------------------------------------------------------------------------
+
+* Backend API: Python 3.11, FastAPI (Asynchronous REST API, Dependency Injection, CORS middleware).
+* ORM & Database: MySQL 8.0, SQLAlchemy 2.0 (Declarative Base, Connection Pooling with pool_pre_ping=True), PyMySQL.
+* Frontend UI: React 18, Vite, Recharts (SVG Charts: BarCharts, ComposedCharts, Tooltips), Lucide-React, Vanilla CSS.
+================================================================================

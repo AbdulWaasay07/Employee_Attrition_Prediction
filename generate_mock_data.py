@@ -1,161 +1,203 @@
 import pandas as pd
 import random
 import uuid
+import os
 import numpy as np
 from datetime import datetime, timedelta
 
-NUM_CUSTOMERS = 150
-print(f"Generating 'Dirty' mock data for {NUM_CUSTOMERS} customers to test the Data Cleaner Engine...")
+NUM_EMPLOYEES = 150
+OUTPUT_DIR = "Mock Data"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Helper to randomly decide if we should introduce an error
+print(f"Generating 'Dirty' HR mock data for {NUM_EMPLOYEES} employees in '{OUTPUT_DIR}' directory...")
+
+# Helper to randomly decide if we should introduce noise
 def flip_coin(probability=0.05):
     return random.random() < probability
 
-# 1. Customers
-customers = []
+# 1. Employees (Primary Hub)
+employees = []
+departments = [" Engineering ", "Sales", " Marketing ", "Human Resources", " Finance ", "Product", " Operations "]
+job_roles = ["Software Engineer", "Sales Executive", "Marketing Specialist", "HR Generalist", "Financial Analyst", "Product Manager", "Operations Lead"]
 locations = ["New York", "San Francisco", "London", "Austin", "Berlin", "Toronto", "Sydney"]
-for i in range(1, NUM_CUSTOMERS + 1):
-    cid = f"CUST{i:03d}"
+
+for i in range(1, NUM_EMPLOYEES + 1):
+    eid = f"EMP{i:03d}"
     
-    # Introduce case inconsistency error
-    if flip_coin(): cid = cid.lower()
-    if flip_coin(): cid = f" {cid} "
+    # Introduce case/whitespace inconsistency
+    if flip_coin(): eid = eid.lower()
+    if flip_coin(): eid = f" {eid} "
     
-    name = f"Customer {i}" if not flip_coin() else np.nan # Missing name
-    location = random.choice(locations) if not flip_coin(0.1) else None # Missing location
+    name = f"Employee {i}" if not flip_coin(0.05) else np.nan  # Missing name
+    dept = random.choice(departments)
+    role = random.choice(job_roles)
+    location = random.choice(locations) if not flip_coin(0.1) else None  # Missing location
     
-    customers.append({
-        "customer_id": cid,
+    # Missing manager_id noise
+    manager_id = f"EMP{random.randint(1, 15):03d}" if i > 15 and not flip_coin(0.2) else None
+
+    hire_days_ago = random.randint(180, 2500)
+    hire_date = (datetime.now() - timedelta(days=hire_days_ago)).strftime('%Y-%m-%d')
+    
+    employees.append({
+        "employee_id": eid,
         "name": name,
-        "email": f"customer{i}@example.com",
-        "phone": f"555-01{i:02d}",
+        "email": f"employee{i}@company.com",
+        "department": dept,
+        "job_role": role,
+        "hire_date": hire_date,
         "location": location,
-        "sign_up_date": (datetime.now() - timedelta(days=random.randint(30, 730))).strftime('%Y-%m-%d')
+        "manager_id": manager_id
     })
-pd.DataFrame(customers).to_csv("mock_customers.csv", index=False)
-print("Created mock_customers.csv (with missing names, missing locations, and case inconsistencies)")
 
-# 2. Products
-products = []
-for i in range(1, 11):
-    price = round(random.uniform(49.99, 499.99), 2)
-    if flip_coin(): price = np.nan # Missing price
+pd.DataFrame(employees).to_csv(os.path.join(OUTPUT_DIR, "mock_employees.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_employees.csv')} (with missing names, missing locations, whitespace departments, and missing manager IDs)")
+
+# 2. Compensation, 3. Performance, 4. Workload, 5. HR Tickets, 6. Training
+compensation = []
+performance = []
+workload = []
+hr_tickets = []
+training = []
+
+training_names = ["Compliance 101", "Leadership Skills", "Advanced Python", "Security Awareness", "Project Management"]
+
+for emp in employees:
+    clean_eid = emp["employee_id"].strip().upper()
+    emp_idx = int(clean_eid.replace("EMP", ""))
     
-    products.append({
-        "product_id": f"PROD{i:03d}",
-        "product_name": f"Enterprise Software {i}",
-        "price": price
+    # Correlation: 30% of employees are burnout/flight risk
+    is_burnout = (emp_idx % 3 == 0) or flip_coin(0.15)
+    
+    # --- 2. Compensation ---
+    base_salary = random.randint(55000, 140000) if not is_burnout else random.randint(45000, 85000)
+    
+    # Inject salary noise
+    salary_val = base_salary
+    if flip_coin(0.02): salary_val = 999999  # Extreme outlier / typo
+    elif flip_coin(0.08): salary_val = f"${base_salary:,}"  # String formatting with $ and commas
+    elif flip_coin(0.03): salary_val = np.nan
+    
+    bonus_val = random.randint(2000, 15000) if not is_burnout else random.randint(0, 2000)
+    stock_val = random.randint(0, 10000) if not is_burnout else 0
+    
+    compensation.append({
+        "comp_id": str(uuid.uuid4()),
+        "employee_id": clean_eid.lower() if flip_coin() else clean_eid,
+        "salary": salary_val,
+        "bonus": bonus_val,
+        "stock_options": stock_val,
+        "effective_date": (datetime.now() - timedelta(days=random.randint(30, 365))).strftime('%Y-%m-%d')
     })
-pd.DataFrame(products).to_csv("mock_products.csv", index=False)
-print("Created mock_products.csv (with missing prices)")
-
-# 3. Transactions & 4. Support Tickets & 5. Behavior & 6. Marketing
-transactions = []
-support = []
-behavior = []
-marketing = []
-
-for cust in customers:
-    # Use the clean ID for relation generation so we don't break our own loop, 
-    # but we'll inject dirty IDs into the child tables randomly.
-    clean_cid = cust["customer_id"].strip().upper()
     
-    is_at_risk = random.random() < 0.3 
-    
-    # Transactions
-    num_purchases = random.randint(1, 3) if is_at_risk else random.randint(5, 20)
-    for _ in range(num_purchases):
-        prod = random.choice(products)
-        
-        # Inject Dirty Amount
-        amt = prod["price"]
-        if flip_coin(): amt = np.nan # Missing Amount
-        elif flip_coin(0.01): amt = 99999999 # Extreme Outlier (should be Winsorized)
-        elif flip_coin(): amt = f"${amt}" # String formatting error (should be stripped)
-        
-        # Inject Dirty Quantity
-        qty = random.randint(1, 3)
-        if flip_coin(): qty = np.nan # Missing quantity (should default to 1)
-        elif flip_coin(0.02): qty = "two" # Invalid string quantity
-        
-        dirty_cid = clean_cid.lower() if flip_coin() else clean_cid
-        
-        transactions.append({
-            "transaction_id": str(uuid.uuid4()),
-            "customer_id": dirty_cid,
-            "product_id": prod["product_id"],
-            "transaction_date": (datetime.now() - timedelta(days=random.randint(1, 180))).strftime('%Y-%m-%d'),
-            "amount": amt,
-            "quantity": qty,
-            "payment_method": random.choice(["Credit Card", "PayPal", "Bank Transfer", "   CrEdIt CaRd   "]),
-            "status": "Completed"
+    # Add historic compensation record for salary growth rate calculation
+    if flip_coin(0.4):
+        initial_salary = int(base_salary * random.uniform(0.85, 0.95))
+        compensation.append({
+            "comp_id": str(uuid.uuid4()),
+            "employee_id": clean_eid,
+            "salary": initial_salary,
+            "bonus": 0,
+            "stock_options": 0,
+            "effective_date": (datetime.now() - timedelta(days=random.randint(366, 730))).strftime('%Y-%m-%d')
         })
+
+    # --- 3. Performance Reviews ---
+    num_reviews = random.randint(1, 4)
+    for r in range(num_reviews):
+        rating_val = random.randint(1, 2) if is_burnout else random.randint(3, 5)
+        if flip_coin(0.08): rating_val = np.nan  # Missing performance rating noise
         
-    # Support Tickets
-    num_tickets = random.randint(3, 8) if is_at_risk else random.randint(0, 2)
+        promo = (not is_burnout) and flip_coin(0.25)
+        fb_score = random.randint(1, 3) if is_burnout else random.randint(4, 5)
+        
+        performance.append({
+            "review_id": str(uuid.uuid4()),
+            "employee_id": clean_eid,
+            "review_date": (datetime.now() - timedelta(days=180 * (r + 1))).strftime('%Y-%m-%d'),
+            "rating": rating_val,
+            "promotion_given": promo,
+            "manager_feedback_score": fb_score
+        })
+
+    # --- 4. Workload & Attendance ---
+    num_logs = random.randint(3, 6)
+    for _ in range(num_logs):
+        weekly_hrs = random.randint(48, 65) if is_burnout else random.randint(38, 45)
+        if flip_coin(0.05): weekly_hrs = np.nan  # Missing weekly hours
+        
+        overtime_hrs = random.randint(10, 25) if is_burnout else random.randint(0, 5)
+        if flip_coin(0.04): overtime_hrs = -5  # Negative overtime hours noise
+        
+        sick_leaves = random.randint(3, 10) if is_burnout else random.randint(0, 2)
+        remote = random.randint(0, 5)
+        
+        workload.append({
+            "workload_id": str(uuid.uuid4()),
+            "employee_id": clean_eid.lower() if flip_coin() else clean_eid,
+            "log_date": (datetime.now() - timedelta(days=random.randint(1, 90))).strftime('%Y-%m-%d'),
+            "weekly_hours": weekly_hrs,
+            "overtime_hours": overtime_hrs,
+            "sick_leaves_taken": sick_leaves,
+            "remote_days": remote
+        })
+
+    # --- 5. HR Tickets ---
+    num_tickets = random.randint(2, 6) if is_burnout else random.randint(0, 1)
     for _ in range(num_tickets):
-        dirty_cid = f" {clean_cid} " if flip_coin() else clean_cid
+        ticket_id = str(uuid.uuid4()) if not flip_coin(0.25) else np.nan  # Missing PK noise
         
-        sev = "High" if is_at_risk else random.choice(["Low", "Medium"])
-        if flip_coin(): sev = sev.lower() # Case inconsistency
-        if flip_coin(): sev = f" {sev} " # Whitespace inconsistency
+        sev = "High" if is_burnout else random.choice(["Low", "Medium"])
+        if flip_coin(): sev = sev.lower()
+        if flip_coin(): sev = f" {sev} "
         
-        support.append({
-            "ticket_id": str(uuid.uuid4()),
-            "customer_id": dirty_cid,
-            "issue_date": (datetime.now() - timedelta(days=random.randint(1, 180))).strftime('%Y-%m-%d'),
-            "resolution_date": (datetime.now() - timedelta(days=random.randint(0, 5))).strftime('%Y-%m-%d') if not flip_coin() else np.nan, # Missing resolution date
-            "category": random.choice(["Billing", "Technical", "Account"]),
+        cat = random.choice(["Compensation", "Culture", "Workload"])
+        sat = random.randint(1, 2) if is_burnout else random.randint(4, 5)
+        
+        issue_d = datetime.now() - timedelta(days=random.randint(1, 180))
+        res_d = issue_d + timedelta(days=random.randint(1, 10)) if not flip_coin(0.2) else np.nan  # Missing resolution date
+        
+        hr_tickets.append({
+            "ticket_id": ticket_id,
+            "employee_id": f" {clean_eid} " if flip_coin() else clean_eid,
+            "issue_date": issue_d.strftime('%Y-%m-%d'),
+            "resolution_date": res_d.strftime('%Y-%m-%d') if isinstance(res_d, datetime) else res_d,
+            "category": cat,
             "severity": sev,
-            "status": "Resolved",
-            "csat_score": random.randint(1, 3) if is_at_risk else random.randint(4, 5)
-        })
-        
-    # Behavior
-    num_sessions = random.randint(10, 20) if is_at_risk else random.randint(50, 200)
-    for _ in range(5):
-        duration = random.randint(30, 120) if is_at_risk else random.randint(300, 900)
-        if flip_coin(): duration = np.nan # Missing duration (should be imputed with median)
-        
-        views = int((num_sessions * random.randint(2, 5)) / 5)
-        if flip_coin(0.02): views = -10 # Impossible negative value
-        
-        behavior.append({
-            "behavior_id": str(uuid.uuid4()),
-            "customer_id": clean_cid,
-            "log_date": (datetime.now() - timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d'),
-            "website_visits": int(num_sessions / 5),
-            "app_sessions": int(num_sessions / 5),
-            "page_views": views,
-            "avg_session_duration": duration
-        })
-        
-    # Marketing
-    for _ in range(random.randint(2, 5)):
-        # Deliberately remove interaction_id sometimes to test UUID auto-generation in Data Cleaner
-        interaction_id = str(uuid.uuid4()) if not flip_coin(0.3) else np.nan
-        
-        marketing.append({
-            "interaction_id": interaction_id,
-            "customer_id": clean_cid.lower() if flip_coin() else clean_cid,
-            "campaign_id": f"CAMP{random.randint(1,10):03d}",
-            "channel": random.choice(["Email", "Social Media", "Search", "Webinar", " eMail "]),
-            "send_date": (datetime.now() - timedelta(days=random.randint(1, 180))).strftime('%Y-%m-%d'),
-            "opened": random.choice([True, False]),
-            "clicked": random.choice([True, False]) if not is_at_risk else False,
-            "converted": random.choice([True, False]) if not is_at_risk else False
+            "status": "Resolved" if not pd.isna(res_d) else "Open",
+            "satisfaction_score": sat
         })
 
-pd.DataFrame(transactions).to_csv("mock_transactions.csv", index=False)
-print("Created mock_transactions.csv (with outliers, missing amounts, bad currency formats, and case issues)")
+    # --- 6. Training Engagement ---
+    for t_name in random.sample(training_names, random.randint(1, 3)):
+        completed_val = random.choice([True, False]) if is_burnout else True
+        if flip_coin(0.1): completed_val = "True" if completed_val else "False"
+        
+        score_val = random.randint(50, 75) if is_burnout else random.randint(80, 100)
+        
+        training.append({
+            "event_id": str(uuid.uuid4()),
+            "employee_id": clean_eid,
+            "training_name": t_name,
+            "event_date": (datetime.now() - timedelta(days=random.randint(10, 180))).strftime('%Y-%m-%d'),
+            "completed": completed_val,
+            "score": score_val
+        })
 
-pd.DataFrame(support).to_csv("mock_support.csv", index=False)
-print("Created mock_support.csv (with whitespace errors, missing dates)")
+# Export to CSVs in Mock Data folder
+pd.DataFrame(compensation).to_csv(os.path.join(OUTPUT_DIR, "mock_compensation.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_compensation.csv')} (with salary typos like $999,999, string formatting, missing values)")
 
-pd.DataFrame(behavior).to_csv("mock_behavior.csv", index=False)
-print("Created mock_behavior.csv (with missing durations and negative views)")
+pd.DataFrame(performance).to_csv(os.path.join(OUTPUT_DIR, "mock_performance.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_performance.csv')} (with missing ratings)")
 
-pd.DataFrame(marketing).to_csv("mock_marketing.csv", index=False)
-print("Created mock_marketing.csv (with MISSING Primary Keys to test auto-generation)")
+pd.DataFrame(workload).to_csv(os.path.join(OUTPUT_DIR, "mock_workload.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_workload.csv')} (with negative overtime hours, missing weekly hours)")
 
-print("\nSuccess! 'Dirty' CSV files generated. Time to break the Data Cleaner!")
+pd.DataFrame(hr_tickets).to_csv(os.path.join(OUTPUT_DIR, "mock_hr_tickets.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_hr_tickets.csv')} (with missing PKs, whitespace in severity, missing resolution dates)")
+
+pd.DataFrame(training).to_csv(os.path.join(OUTPUT_DIR, "mock_training.csv"), index=False)
+print(f"Created {os.path.join(OUTPUT_DIR, 'mock_training.csv')} (with mixed type boolean completion flags)")
+
+print(f"\nSuccess! HR 'Dirty' mock datasets created inside '{OUTPUT_DIR}' for 150 employees.")
